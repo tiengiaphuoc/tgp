@@ -1,59 +1,56 @@
-name: Publish Mộcceutics demo
+name: Verify Mocceutics demo
 on:
   push:
     branches: [master]
   workflow_dispatch:
+  workflow_run:
+    workflows: ['pages build and deployment']
+    types: [completed]
 permissions:
   contents: read
-  pages: write
-  id-token: write
 concurrency:
-  group: pages
-  cancel-in-progress: false
+  group: mocceutics-public-verification
+  cancel-in-progress: true
 jobs:
-  deploy:
+  verify:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
       - run: npm run check
-      - name: Prepare public files only
-        run: |
-          mkdir -p _site/src
-          cp index.html _site/index.html
-          cp src/app.js src/style.css _site/src/
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-      - uses: actions/deploy-pages@v4
-        id: deploy
       - name: Verify public app and assets
-        env:
-          APP_URL: ${{ steps.deploy.outputs.page_url }}
         run: |
           node --input-type=module <<'JS'
-          const base = new URL(process.env.APP_URL);
-          if (base.hostname !== 'tiengiaphuoc.github.io') throw new Error('Unexpected demo hostname: ' + base.hostname);
+          const base = new URL('https://tiengiaphuoc.github.io/tgp/');
           for (let attempt = 0; attempt < 12; attempt++) {
             try {
               for (const [path, expected] of [['./', 'Mộcceutics — Chăm tóc'], ['./src/app.js', 'function render()'], ['./src/style.css', '.sidebar']]) {
                 const response = await fetch(new URL(path, base));
                 if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
-                const text = await response.text();
-                if (!text.includes(expected)) throw new Error(`${path}: expected app content missing`);
+                if (!response.url.startsWith(base.href)) throw new Error('Unexpected redirect: ' + response.url);
+                if (!(await response.text()).includes(expected)) throw new Error(`${path}: expected content missing`);
               }
               console.log('VERIFIED_APP_URL=' + base.href);
               break;
             } catch (error) {
               if (attempt === 11) throw error;
-              console.log('Waiting for public deployment: ' + error.message);
+              console.log('Waiting for deployment: ' + error.message);
               await new Promise(resolve => setTimeout(resolve, 10000));
             }
           }
           JS
+      - name: Install browser test tool
+        run: |
+          npm install --prefix "$RUNNER_TEMP/moc-browser" --no-save --ignore-scripts playwright
+          if ! command -v google-chrome; then
+            node "$RUNNER_TEMP/moc-browser/node_modules/playwright/cli.js" install --with-deps chromium
+          fi
+      - name: Test the public app on mobile and desktop
+        env:
+          MOC_APP_URL: https://tiengiaphuoc.github.io/tgp/
+        run: |
+          export MOC_PLAYWRIGHT_PATH="$RUNNER_TEMP/moc-browser/node_modules/playwright"
+          export MOC_CHROME_PATH="$(command -v google-chrome || true)"
+          node scripts/public-smoke.cjs

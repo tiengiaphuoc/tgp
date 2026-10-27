@@ -12,6 +12,6 @@ Sản phẩm được thể hiện bằng hình minh họa CSS, chưa phải ả
 
 ## Xuất bản demo
 
-Đã chuẩn bị GitHub Pages workflow ở `.github/workflows/pages.yml`. Cần bật Pages với source GitHub Actions cho repository, rồi đẩy mã nguồn lên nhánh `master`. Workflow chỉ tải lên `index.html`, `src/app.js`, `src/style.css`; không đưa ảnh chụp màn hình, dữ liệu cá nhân hoặc máy chủ phát triển lên website. Đường dẫn asset tương đối hỗ trợ website nằm trong thư mục con.
+GitHub Pages phục vụ nhánh `master`, thư mục gốc, tại https://tiengiaphuoc.github.io/tgp/ với HTTPS. Không thêm `CNAME` trừ khi đã cấu hình và xác minh tên miền riêng. Xóa CNAME cũ đã khôi phục địa chỉ mặc định.
 
-Chưa xuất bản hoặc xác minh địa chỉ công khai. Trong phiên chuẩn bị, API GitHub bị chặn bởi chính sách mạng (HTTP 403 tại bước CONNECT).
+Workflow `.github/workflows/pages.yml` chỉ kiểm tra website sau khi cập nhật; việc xuất bản do workflow Pages mặc định của GitHub thực hiện, tránh hai quy trình triển khai cùng lúc. Kiểm tra gồm HTTP, nội dung HTML/JS/CSS và thao tác trên trình duyệt thật bằng `scripts/public-smoke.cjs`. Workflow không dùng ảnh hoặc thông tin khách hàng thực.
