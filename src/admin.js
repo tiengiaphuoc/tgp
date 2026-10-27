@@ -9,7 +9,7 @@ let saved={};try{saved=JSON.parse(localStorage.getItem('moc-admin-demo')||'{}')}
 let customers=seeds.map((s,i)=>({id:'MC'+String(i+1).padStart(3,'0'),name:'Khách mẫu '+s[0],region:s[1],logs:s[2],week:s[3],status:s[4],plan:s[5],stock:s[6],consent:s[7],notes:[],owner:'Chưa phân công',handled:false,...saved['MC'+String(i+1).padStart(3,'0')]}));
 let view=location.hash==='#articles'?'articles':'overview',query='',filter='all',planFilter='all',sort='id',page=1,period=30,selection=new Set(),drawerId=null,returnFocus=null;
 const nav=[['overview','grid','Tổng quan'],['customers','users','Khách hàng'],['care','heart','Cần chăm sóc'],['products','bottle','Sản phẩm'],['articles','leaf','Bài viết'],['reports','chart','Báo cáo'],['settings','settings','Cài đặt']];
-const articleManager=createArticleManager(articlePublication.posts,{refresh:()=>shell(),toast});
+const articleManager=createArticleManager(articlePublication.posts,{refresh:()=>shell(),toast,sourceAvailable:!articlePublication.fallback});
 const total=()=>customers.reduce((a,c)=>a+(period===7?c.week:c.logs),0);
 const persist=()=>{try{localStorage.setItem('moc-admin-demo',JSON.stringify(Object.fromEntries(customers.map(c=>[c.id,{notes:c.notes,owner:c.owner,handled:c.handled}]))));return true}catch{toast('Không lưu được thay đổi. Bộ nhớ trình duyệt có thể đã đầy.');return false}};
 function toast(s){const e=document.querySelector('#admin-toast');e.textContent=s;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),3500)}
