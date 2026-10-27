@@ -27,9 +27,43 @@ jobs:
           mkdir -p _site/src
           cp index.html _site/index.html
           cp src/app.js src/style.css _site/src/
+      - name: Use the default HTTPS demo address
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.request('PUT /repos/{owner}/{repo}/pages', {
+              ...context.repo,
+              cname: null,
+              build_type: 'workflow',
+              https_enforced: true
+            });
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
       - uses: actions/deploy-pages@v4
         id: deploy
+      - name: Verify public app and assets
+        env:
+          APP_URL: ${{ steps.deploy.outputs.page_url }}
+        run: |
+          node --input-type=module <<'JS'
+          const base = new URL(process.env.APP_URL);
+          if (base.hostname !== 'tiengiaphuoc.github.io') throw new Error('Unexpected demo hostname: ' + base.hostname);
+          for (let attempt = 0; attempt < 12; attempt++) {
+            try {
+              for (const [path, expected] of [['./', 'Mộcceutics — Chăm tóc'], ['./src/app.js', 'function render()'], ['./src/style.css', '.sidebar']]) {
+                const response = await fetch(new URL(path, base));
+                if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+                const text = await response.text();
+                if (!text.includes(expected)) throw new Error(`${path}: expected app content missing`);
+              }
+              console.log('VERIFIED_APP_URL=' + base.href);
+              break;
+            } catch (error) {
+              if (attempt === 11) throw error;
+              console.log('Waiting for public deployment: ' + error.message);
+              await new Promise(resolve => setTimeout(resolve, 10000));
+            }
+          }
+          JS
