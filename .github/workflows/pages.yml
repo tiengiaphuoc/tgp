@@ -26,7 +26,7 @@ jobs:
           const base = new URL('https://tiengiaphuoc.github.io/tgp/');
           for (let attempt = 0; attempt < 12; attempt++) {
             try {
-              for (const [path, expected] of [['./', 'Mộcceutics — Chăm tóc'], ['./src/app.js', 'function render()'], ['./src/style.css', '.sidebar']]) {
+              for (const [path, expected] of [['./', 'Mộcceutics — Chăm tóc'], ['./src/app.js', 'function render()'], ['./src/style.css', '.sidebar'], ['./admin.html', 'Quản trị chăm sóc'], ['./src/admin.js', 'function shell()'], ['./src/admin.css', '.drawer']]) {
                 const response = await fetch(new URL(path, base));
                 if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
                 if (!response.url.startsWith(base.href)) throw new Error('Unexpected redirect: ' + response.url);
@@ -54,3 +54,4 @@ jobs:
           export MOC_PLAYWRIGHT_PATH="$RUNNER_TEMP/moc-browser/node_modules/playwright"
           export MOC_CHROME_PATH="$(command -v google-chrome || true)"
           node scripts/public-smoke.cjs
+          node scripts/admin-smoke.cjs

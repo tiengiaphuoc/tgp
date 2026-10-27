@@ -15,3 +15,9 @@ Sản phẩm được thể hiện bằng hình minh họa CSS, chưa phải ả
 GitHub Pages phục vụ nhánh `master`, thư mục gốc, tại https://tiengiaphuoc.github.io/tgp/ với HTTPS. Không thêm `CNAME` trừ khi đã cấu hình và xác minh tên miền riêng. Xóa CNAME cũ đã khôi phục địa chỉ mặc định.
 
 Workflow `.github/workflows/pages.yml` chỉ kiểm tra website sau khi cập nhật; việc xuất bản do workflow Pages mặc định của GitHub thực hiện, tránh hai quy trình triển khai cùng lúc. Kiểm tra gồm HTTP, nội dung HTML/JS/CSS và thao tác trên trình duyệt thật bằng `scripts/public-smoke.cjs`. Workflow không dùng ảnh hoặc thông tin khách hàng thực.
+
+## Trang quản trị minh họa
+
+Mở `admin.html` tại cùng website. Có 12 khách mẫu, tìm kiếm/lọc/sắp xếp/phân trang, phân công hàng loạt, ghi chú hồ sơ, đánh dấu hỗ trợ, trạng thái chia sẻ ảnh minh họa, xuất CSV và báo cáo mẫu. Thay đổi chỉ lưu tại `moc-admin-demo` trong localStorage, độc lập dữ liệu app khách hàng. Không có đăng nhập, truy cập dữ liệu thật, gửi tin nhắn hay thanh toán. Không nhập dữ liệu khách thật vào trang demo công khai.
+
+Vận hành thật cần backend đăng nhập quản trị, phân quyền máy chủ, cơ sở dữ liệu và kho ảnh riêng tư; kiểm tra đồng ý chia sẻ ở máy chủ, nhật ký truy cập và quy trình xuất/xóa dữ liệu. Kiểm tra trình duyệt quản trị: `scripts/admin-smoke.cjs`.
