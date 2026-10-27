@@ -21,13 +21,14 @@ jobs:
           node-version: '24'
       - run: npm run check
       - run: node scripts/scan-math-test.mjs
+      - run: node scripts/ai-contract-test.mjs
       - name: Verify public app and assets
         run: |
           node --input-type=module <<'JS'
           const base = new URL('https://tiengiaphuoc.github.io/tgp/');
           for (let attempt = 0; attempt < 12; attempt++) {
             try {
-              for (const [path, expected] of [['./', 'Mộcceutics — Chăm tóc'], ['./src/app.js', 'function render()'], ['./src/hair-scan.js', 'measurePixels'], ['./src/style.css', '.sidebar'], ['./admin.html', 'Quản trị chăm sóc'], ['./src/admin.js', 'function shell()'], ['./src/admin.css', '.drawer']]) {
+              for (const [path, expected] of [['./', 'Mộcceutics — Chăm tóc'], ['./src/app.js', 'function render()'], ['./src/hair-scan.js', 'measurePixels'], ['./src/ai-client.js', 'requestAiAssessment'], ['./src/ai-ui.js', 'aiOverview'], ['./src/style.css', '.sidebar'], ['./admin.html', 'Quản trị chăm sóc'], ['./src/admin.js', 'function shell()'], ['./src/admin.css', '.drawer']]) {
                 const response = await fetch(new URL(path, base));
                 if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
                 if (!response.url.startsWith(base.href)) throw new Error('Unexpected redirect: ' + response.url);

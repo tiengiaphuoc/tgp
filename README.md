@@ -29,3 +29,7 @@ Mở `/#progress` (hoặc `/tgp/#progress` trên Pages). Có 5 vùng chụp, ả
 Không có API AI hoặc máy chủ xử lý ảnh. Ngưỡng chất lượng không chứng minh ảnh đủ điều kiện đánh giá y khoa. Nội dung khuyến nghị cần bác sĩ duyệt trước dùng thương mại. Tham khảo do người dùng cung cấp: HairCode App Store ID 6745830661; phiên phát triển không truy cập được Apple vì HTTP CONNECT 403, không xác minh thuật toán hoặc tính năng hiện tại của HairCode.
 
 Kiểm tra số đo bằng `node scripts/scan-math-test.mjs`; kiểm tra trình duyệt bằng `scripts/scan-smoke.cjs`.
+
+## Kết nối AI (chưa kích hoạt)
+
+Phần Tiến trình có mục Mộc AI riêng với trạng thái kết nối thật. Giao diện chưa tạo kết quả AI vì chưa có backend, dịch vụ và xác thực người dùng. Cầu nối API và kiểm tra phản hồi ở `src/ai-client.js`; xem `docs/AI-INTEGRATION.md` để triển khai dịch vụ có xác thực và chính sách xử lý ảnh trước khi bật. Không đặt API key trong website tĩnh. Kiểm thử dùng fixture không thay thế việc thử mô hình thật.
