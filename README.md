@@ -33,3 +33,9 @@ Kiểm tra số đo bằng `node scripts/scan-math-test.mjs`; kiểm tra trình 
 ## Kết nối AI (chưa kích hoạt)
 
 Phần Tiến trình có mục Mộc AI riêng với trạng thái kết nối thật. Giao diện chưa tạo kết quả AI vì chưa có backend, dịch vụ và xác thực người dùng. Cầu nối API và kiểm tra phản hồi ở `src/ai-client.js`; xem `docs/AI-INTEGRATION.md` để triển khai dịch vụ có xác thực và chính sách xử lý ảnh trước khi bật. Không đặt API key trong website tĩnh. Kiểm thử dùng fixture không thay thế việc thử mô hình thật.
+
+## Giao diện Botanical Studio v2
+
+`src/theme.css` là lớp giao diện chung cho app và trang quản trị: xanh rừng, vàng champagne, nền kem, hình khối nổi nhẹ và kích thước chữ lớn hơn. `assets/mocceutics-3d.png` là hình minh họa 3D tạo riêng, không phải ảnh bao bì sản phẩm thực. Ảnh tĩnh được lưu cùng website, không phụ thuộc dịch vụ ảnh ngoài. Hỗ trợ giảm chuyển động theo hệ điều hành.
+
+Kiểm tra responsive và tải ảnh bằng `scripts/design-smoke.cjs` ở 360/768/1440px.
