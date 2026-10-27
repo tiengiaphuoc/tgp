@@ -56,8 +56,4 @@ jobs:
         run: |
           export MOC_PLAYWRIGHT_PATH="$RUNNER_TEMP/moc-browser/node_modules/playwright"
           export MOC_CHROME_PATH="$(command -v google-chrome || true)"
-          node scripts/public-smoke.cjs
-          node scripts/admin-smoke.cjs
-          node scripts/scan-smoke.cjs
-          node scripts/design-smoke.cjs
-          node scripts/articles-smoke.cjs
+          node scripts/browser-suite.cjs
