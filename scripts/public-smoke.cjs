@@ -29,6 +29,7 @@ const assert=require('node:assert/strict');
   await page.locator('input[type="file"]').setInputFiles({name:'demo.png',mimeType:'image/png',buffer:image});
   await page.locator('#photo-form .btn').click();
   await page.waitForSelector('.saved-photo');
+  if (await page.locator('#modal').isVisible()) await page.keyboard.press('Escape');
   assert.equal(await page.locator('.saved-photo').count(),1);
   await page.setViewportSize({width:1440,height:1000});
   await page.locator('[data-page="home"]:visible').first().click();

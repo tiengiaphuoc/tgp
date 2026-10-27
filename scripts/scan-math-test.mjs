@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {measurePixels,qualityFlags,comparisonWarnings} from '../src/hair-scan.js';
+const pixels=(n,fn)=>{const a=new Uint8ClampedArray(n*n*4);for(let y=0;y<n;y++)for(let x=0;x<n;x++){const i=(y*n+x)*4;a[i]=a[i+1]=a[i+2]=fn(x,y);a[i+3]=255;}return a;};
+const dark=measurePixels(pixels(8,()=>0),8,8,800,800);assert.equal(dark.brightness,0);assert.equal(dark.darkPercent,100);assert.equal(dark.detail,0);assert(qualityFlags(dark).some(x=>x.includes('Ảnh tối')));
+const white=measurePixels(pixels(8,()=>255),8,8,800,800);assert.equal(white.brightness,100);assert.equal(white.brightPercent,100);assert(qualityFlags(white).some(x=>x.includes('vùng sáng')));
+const texture=measurePixels(pixels(8,(x,y)=>(x+y)%2?200:50),8,8,800,800);assert.equal(texture.brightness,49);assert(texture.detail>35);assert.equal(qualityFlags(texture).length,0);
+const small={...texture,width:200,height:200};assert(qualityFlags(small).some(x=>x.includes('phân giải thấp')));
+const p={angle:'Đỉnh đầu',scan:{quality:texture,conditions:{dry:'Tóc khô',light:'Ánh sáng tự nhiên',styling:'Giữ nguyên, không che phủ'}}};assert.equal(comparisonWarnings(p,structuredClone(p)).length,0);
+const altered=structuredClone(p);altered.scan.conditions.dry='Tóc ướt / ẩm';altered.scan.conditions.light='Có flash';assert.equal(comparisonWarnings(p,altered).length,2);
+assert(comparisonWarnings({angle:'Đỉnh đầu'},p).some(x=>x.includes('ảnh cũ')));
+assert(comparisonWarnings(p,{...p,angle:'Đường ngôi'}).some(x=>x.includes('Khác vùng')));
+console.log('SCAN_MATH_PASS: black, white, texture, low-resolution, matching/different conditions, legacy metadata and region mismatch.');

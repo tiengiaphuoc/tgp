@@ -21,3 +21,11 @@ Workflow `.github/workflows/pages.yml` chỉ kiểm tra website sau khi cập nh
 Mở `admin.html` tại cùng website. Có 12 khách mẫu, tìm kiếm/lọc/sắp xếp/phân trang, phân công hàng loạt, ghi chú hồ sơ, đánh dấu hỗ trợ, trạng thái chia sẻ ảnh minh họa, xuất CSV và báo cáo mẫu. Thay đổi chỉ lưu tại `moc-admin-demo` trong localStorage, độc lập dữ liệu app khách hàng. Không có đăng nhập, truy cập dữ liệu thật, gửi tin nhắn hay thanh toán. Không nhập dữ liệu khách thật vào trang demo công khai.
 
 Vận hành thật cần backend đăng nhập quản trị, phân quyền máy chủ, cơ sở dữ liệu và kho ảnh riêng tư; kiểm tra đồng ý chia sẻ ở máy chủ, nhật ký truy cập và quy trình xuất/xóa dữ liệu. Kiểm tra trình duyệt quản trị: `scripts/admin-smoke.cjs`.
+
+## Quét & theo dõi tóc
+
+Mở `/#progress` (hoặc `/tgp/#progress` trên Pages). Có 5 vùng chụp, ảnh tham chiếu, điều kiện chụp, cảm nhận tự khai, báo cáo từng ảnh và thanh kéo so sánh cùng vùng. `src/hair-scan.js` tính độ sáng trung bình, tỷ lệ pixel sáng và phương sai Laplacian trên ảnh thu nhỏ ngay trên thiết bị. Đây là kiểm tra chất lượng ảnh theo ngưỡng cơ bản, chưa kiểm định lâm sàng; không nhận diện tóc/da đầu, không đo mật độ, đếm nang tóc hoặc chẩn đoán. Báo cáo phân biệt rõ dữ liệu ảnh và tự khai; ảnh cũ giữ nguyên, không được tự điền kết quả.
+
+Không có API AI hoặc máy chủ xử lý ảnh. Ngưỡng chất lượng không chứng minh ảnh đủ điều kiện đánh giá y khoa. Nội dung khuyến nghị cần bác sĩ duyệt trước dùng thương mại. Tham khảo do người dùng cung cấp: HairCode App Store ID 6745830661; phiên phát triển không truy cập được Apple vì HTTP CONNECT 403, không xác minh thuật toán hoặc tính năng hiện tại của HairCode.
+
+Kiểm tra số đo bằng `node scripts/scan-math-test.mjs`; kiểm tra trình duyệt bằng `scripts/scan-smoke.cjs`.
