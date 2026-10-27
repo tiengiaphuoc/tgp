@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {validatePublication,validatePost,buildPublication,renderArticle,readEdits,saveEdits,fallbackPosts} from '../src/article-store.js';
+validatePublication(JSON.parse(await readFile(new URL('../content/posts.json',import.meta.url))));const canonical=structuredClone(fallbackPosts);
+const changed={...canonical[0],title:'Tiêu đề mới chưa xuất bản'};
+assert.equal(buildPublication(canonical,{[changed.id]:{post:changed,status:'draft'}}).posts[0].title,canonical[0].title);
+assert.equal(buildPublication(canonical,{[changed.id]:{post:changed,status:'ready'}}).posts[0].title,changed.title);
+assert.equal(buildPublication(canonical,{[changed.id]:{post:changed,status:'hidden'}}).posts.length,2);
+const draft={...changed,id:'private-new',body:'Nội dung riêng của bản nháp, không được xuất.'};assert.equal(buildPublication(canonical,{[draft.id]:{post:draft,status:'draft'}}).posts.length,3);
+assert.throws(()=>validatePublication({schemaVersion:1,posts:[canonical[0],canonical[0]]}));
+assert.throws(()=>validatePost({...changed,cover:'javascript:alert(1)'}));assert.throws(()=>validatePost({...changed,cover:'https://tracking.example/image.png'}));
+assert.throws(()=>validatePost({...changed,reviewer:'',reviewedAt:'2026-10-27'}));
+const escaped=renderArticle({...changed,title:'<img src=x onerror=alert(1)>',body:'<script>alert(1)</script> chỉ hiển thị văn bản.'});assert(!escaped.includes('<script>'));assert(escaped.includes('&lt;script&gt;'));assert(escaped.includes('Chưa xác nhận duyệt'));
+let data=null;const storage={getItem:()=>data,setItem:(_,v)=>{data=v}};saveEdits({[draft.id]:{post:draft,status:'draft'}},storage);assert.equal(readEdits(storage)[draft.id].post.id,draft.id);data='{bad';assert.deepEqual(readEdits(storage),{});
+assert.equal(validatePublication({schemaVersion:1,posts:fallbackPosts}).length,3);
+console.log('ARTICLE_DATA_PASS: publication validation, draft privacy, live-version preservation, hide/ready changes, duplicate IDs, safe covers, review metadata, escaping and draft persistence.');

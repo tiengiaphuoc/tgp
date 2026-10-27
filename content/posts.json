@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "publishedAt": "2026-10-27",
+  "posts": [
+    {
+      "id": "moc-post-1",
+      "title": "Chăm tóc đều đặn, bắt đầu từ những điều nhỏ",
+      "excerpt": "Chọn giờ phù hợp sinh hoạt để dễ duy trì. Dùng sản phẩm theo nhãn và không tự tăng lượng khi bỏ quên. Khi xuất hiện ngứa…",
+      "body": "Chọn giờ phù hợp sinh hoạt để dễ duy trì. Dùng sản phẩm theo nhãn và không tự tăng lượng khi bỏ quên. Khi xuất hiện ngứa, đỏ hoặc khó chịu sau sử dụng, ngừng dùng và hỏi người có chuyên môn. Một lịch chăm sóc tốt cần phù hợp với bạn, không gây áp lực phải hoàn hảo.",
+      "category": "Chăm sóc tóc",
+      "cover": "",
+      "featured": true,
+      "author": "Mộcceutics",
+      "reviewer": "",
+      "reviewedAt": "",
+      "sources": "",
+      "updatedAt": "2026-10-27",
+      "readMinutes": 3
+    },
+    {
+      "id": "moc-post-2",
+      "title": "Vì sao ảnh mái tóc cần cùng góc và ánh sáng?",
+      "excerpt": "Ánh sáng, độ ướt của tóc, góc máy và cách rẽ ngôi có thể làm tóc trông dày hoặc thưa khác nhau. Hãy chụp tóc khô, cùng g…",
+      "body": "Ánh sáng, độ ướt của tóc, góc máy và cách rẽ ngôi có thể làm tóc trông dày hoặc thưa khác nhau. Hãy chụp tóc khô, cùng góc, cùng nguồn sáng và khoảng cách. Ảnh giúp nhìn lại, nhưng không đủ để chẩn đoán nguyên nhân rụng tóc, đếm nang tóc hay chứng minh hiệu quả của sản phẩm.",
+      "category": "Hiểu mái tóc",
+      "cover": "",
+      "featured": true,
+      "author": "Mộcceutics",
+      "reviewer": "",
+      "reviewedAt": "",
+      "sources": "",
+      "updatedAt": "2026-10-27",
+      "readMinutes": 3
+    },
+    {
+      "id": "moc-post-3",
+      "title": "Khi nào mái tóc cần được chuyên gia hỗ trợ?",
+      "excerpt": "Nên gặp bác sĩ da liễu khi tóc rụng đột ngột, thành mảng, da đầu đau, đỏ, có vết thương hoặc bạn lo lắng về diễn biến. C…",
+      "body": "Nên gặp bác sĩ da liễu khi tóc rụng đột ngột, thành mảng, da đầu đau, đỏ, có vết thương hoặc bạn lo lắng về diễn biến. Có nhiều nguyên nhân rụng tóc, không thể kết luận qua một bộ ảnh. Nhật ký dùng sản phẩm và triệu chứng có thể giúp chuẩn bị thông tin cho buổi khám.",
+      "category": "Lắng nghe cơ thể",
+      "cover": "",
+      "featured": true,
+      "author": "Mộcceutics",
+      "reviewer": "",
+      "reviewedAt": "",
+      "sources": "",
+      "updatedAt": "2026-10-27",
+      "readMinutes": 3
+    }
+  ]
+}

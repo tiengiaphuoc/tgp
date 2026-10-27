@@ -39,3 +39,13 @@ Phần Tiến trình có mục Mộc AI riêng với trạng thái kết nối t
 `src/theme.css` là lớp giao diện chung cho app và trang quản trị: xanh rừng, vàng champagne, nền kem, hình khối nổi nhẹ và kích thước chữ lớn hơn. `assets/mocceutics-3d.png` là hình minh họa 3D tạo riêng, không phải ảnh bao bì sản phẩm thực. Ảnh tĩnh được lưu cùng website, không phụ thuộc dịch vụ ảnh ngoài. Hỗ trợ giảm chuyển động theo hệ điều hành.
 
 Kiểm tra responsive và tải ảnh bằng `scripts/design-smoke.cjs` ở 360/768/1440px.
+
+## Biên tập bài viết
+
+Mở `admin.html#articles`: tạo/sửa bài, ảnh bìa, chuyên mục, nổi bật, tác giả, người/ngày duyệt và nguồn tham khảo. Bản nháp chỉ lưu trên thiết bị trong `moc-editor-v1`, chưa có đăng nhập hoặc CMS máy chủ. Chọn “Sẵn sàng xuất tệp” không tự xuất bản cho khách.
+
+Bấm **Xuất tệp cập nhật app** để tải `posts.json`; đăng nhập GitHub có quyền repository và tải thay tệp `content/posts.json` trên nhánh `master` tại https://github.com/tiengiaphuoc/tgp/upload/master/content. Sau khi Pages xuất bản, app tải nội dung mới từ tệp JSON. Không đưa token vào frontend. Bản nháp không được xuất; chỉnh nháp bài cũ vẫn giữ phiên bản đã công khai trong tệp xuất; bài đánh dấu ẩn bị loại khỏi bản cập nhật. Cần kiểm tra danh sách trước khi tải lên vì đây là tệp thay toàn bộ bộ bài.
+
+Liên kết “Xem app với nội dung chuẩn bị” dùng `?preview=articles` và chỉ xem bản chuẩn bị trên cùng trình duyệt. App thường không đọc bản nháp từ localStorage. Có sao lưu/khôi phục bản nháp riêng, không nhầm với tệp xuất bản. Nội dung là văn bản, không thực thi HTML. Ảnh được thu nhỏ JPEG và nhúng trong tệp JSON, phù hợp bộ bài nhỏ (tối đa 100 bài); thư viện lớn cần backend và kho ảnh.
+
+Thông tin người duyệt là dữ liệu biên tập tự khai, không xác thực danh tính chuyên môn. Có thông báo rõ trong bài đọc. `scripts/articles-test.mjs` và `scripts/articles-smoke.cjs` kiểm tra bảo toàn bản công khai, không xuất nháp, đọc an toàn và thao tác editor.
