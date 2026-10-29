@@ -3,7 +3,7 @@ const articlePublication=await loadPublication();
 const articlePreview=new URLSearchParams(location.search).get('preview')==='articles';
 const articles=articlePreview?buildPublication(articlePublication.posts,readEdits()).posts:articlePublication.posts;
 import {bindAi} from './ai-ui.js';
-import {scanDashboard,startScan,showReport,showComparison,scanAngles} from './hair-scan.js?v=selfie-1';
+import {scanDashboard,startScan,showReport,showComparison,scanAngles} from './hair-scan.js?v=transparent-2';
 const icons={home:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/>',chart:'<path d="M4 4v16h17M8 15l4-5 4 2 5-7"/>',leaf:'<path d="M20 3C6 2 1 10 6 17s16 2 14-14ZM5 20 16 9"/>',bottle:'<path d="M9 3h6v4H9zM9 7l-3 4v10h12V11l-3-4M7 14h10"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/>',bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>',arrow:'<path d="M4 12h16m-6-6 6 6-6 6"/>',camera:'<path d="M3 7h4l2-3h6l2 3h4v14H3Z"/><circle cx="12" cy="13" r="4"/>',check:'<path d="m5 12 4 4L20 5"/>',sun:'<circle cx="12" cy="12" r="4"/><path d="M12 1v2m0 18v2M1 12h2m18 0h2M4 4l2 2m12 12 2 2M4 20l2-2M18 6l2-2"/>',moon:'<path d="M21 13A9 9 0 0 1 11 3 9 9 0 1 0 21 13Z"/>',plus:'<path d="M12 5v14M5 12h14"/>',lock:'<rect x="5" y="10" width="14" height="12" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/>'};
 const icon=(name)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]||icons.leaf}</svg>`;
 const dayKey=()=>new Date().toLocaleDateString('en-CA');

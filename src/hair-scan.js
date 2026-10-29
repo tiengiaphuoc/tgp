@@ -1,4 +1,4 @@
-import {mountAlignment} from './scan-alignment.js?v=selfie-1';
+import {mountAlignment} from './scan-alignment.js?v=transparent-2';
 import {aiOverview,aiReportSection,bindAi} from './ai-ui.js';
 export const scanAngles=['Đường ngôi','Đỉnh đầu','Đường chân tóc','Thái dương trái','Thái dương phải'];
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
