@@ -27,6 +27,8 @@ jobs:
         run: |
           node --input-type=module <<'JS'
           const base = new URL('https://tiengiaphuoc.github.io/tgp/');
+          const {readFile} = await import('node:fs/promises');
+          const expectedPosts = JSON.parse(await readFile('content/posts.json', 'utf8'));
           for (let attempt = 0; attempt < 12; attempt++) {
             try {
               for (const [path, expected] of [['./', 'Mộcceutics — Chăm tóc'], ['./src/app.js', 'function render()'], ['./src/hair-scan.js', 'measurePixels'], ['./src/ai-client.js', 'requestAiAssessment'], ['./src/ai-ui.js', 'aiOverview'], ['./src/theme.css', 'botanical studio'], ['./src/article-store.js', 'buildPublication'], ['./src/article-manager.js', 'createArticleManager'], ['./content/posts.json', 'schemaVersion'], ['./src/articles.css', '.cms-editor'], ['./src/style.css', '.sidebar'], ['./admin.html', 'Quản trị chăm sóc'], ['./src/admin.js', 'function shell()'], ['./src/admin.css', '.drawer']]) {
@@ -35,6 +37,9 @@ jobs:
                 if (!response.url.startsWith(base.href)) throw new Error('Unexpected redirect: ' + response.url);
                 if (!(await response.text()).includes(expected)) throw new Error(`${path}: expected content missing`);
               }
+              const published = await fetch(new URL('./content/posts.json', base), {cache: 'no-cache'});
+              if (!published.ok || JSON.stringify(await published.json()) !== JSON.stringify(expectedPosts)) throw new Error('Public article file has not updated to this version yet');
+              console.log('VERIFIED_ARTICLES=' + expectedPosts.posts.map(post => post.title).join(' | '));
               console.log('VERIFIED_APP_URL=' + base.href);
               break;
             } catch (error) {
