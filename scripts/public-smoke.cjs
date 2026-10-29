@@ -27,7 +27,7 @@ const assert=require('node:assert/strict');
   const image=await page.screenshot({clip:{x:0,y:0,width:200,height:200}});
   await page.locator('[data-action="photo"]:visible').first().click();
   await page.locator('input[type="file"]').setInputFiles({name:'demo.png',mimeType:'image/png',buffer:image});
-  await page.locator('#photo-form .btn').click();
+  await page.locator('#photo-form [type="submit"]').click();
   await page.waitForSelector('.saved-photo');
   if (await page.locator('#modal').isVisible()) await page.keyboard.press('Escape');
   assert.equal(await page.locator('.saved-photo').count(),1);

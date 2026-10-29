@@ -1,3 +1,3 @@
 const {spawnSync}=require('node:child_process');
-const scripts=['public-smoke','admin-smoke','scan-smoke','design-smoke','articles-smoke'];
+const scripts=['public-smoke','admin-smoke','scan-smoke','design-smoke','articles-smoke','alignment-smoke'];
 for(const name of scripts){const run=spawnSync(process.execPath,[`scripts/${name}.cjs`],{encoding:'utf8',env:process.env,maxBuffer:10000000});process.stdout.write(run.stdout||'');process.stderr.write(run.stderr||'');if(run.status!==0){const message=(run.stderr||run.stdout||run.error?.message||`Exited ${run.status}`).slice(-9000).replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A');console.log(`::error title=${name}::${message}`);process.exit(run.status||1);}}
