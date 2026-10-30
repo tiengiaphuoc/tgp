@@ -1,0 +1,6 @@
+/* Original Mộcceutics logo supplied by the brand. */
+.sidebar .brand{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:100%;height:92px;border-radius:18px;overflow:hidden;background:#0d2916;padding:0;box-shadow:0 4px 0 #203f1d12}
+.sidebar .brand .brand-logo{display:block;width:100%;height:100%;object-fit:cover;object-position:center;border-radius:0}
+.header-brand{display:none}
+@media(min-width:581px) and (max-width:800px){.sidebar .brand{width:56px;height:56px;border-radius:50%;background:white}.sidebar .brand .brand-logo{object-fit:cover}}
+@media(max-width:580px){.sidebar .brand{display:none}.header-brand{display:block;width:116px;height:46px;background:#0d2916;border-radius:11px;overflow:hidden;flex-shrink:0}.header-brand img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}.header-brand~.breadcrumb,header>.header-brand+span{display:none}.header-right,.header-actions{margin-left:auto}}
