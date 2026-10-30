@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {createCloudClient,validateCloudConfig,profilePayload} from '../src/cloud-client.js';
+const config={enabled:true,url:'https://fixture.supabase.co',publishableKey:'sb_publishable_fixture'};
+const storage=()=>{const s=new Map();return {getItem:k=>s.get(k),setItem:(k,v)=>s.set(k,v),removeItem:k=>s.delete(k)};};
+assert.equal(validateCloudConfig({enabled:false}),false);assert.equal(validateCloudConfig(config),true);
+assert.throws(()=>validateCloudConfig({...config,publishableKey:'sb_secret_fixture'}));
+assert.throws(()=>validateCloudConfig({...config,publishableKey:'x.'+btoa(JSON.stringify({role:'service_role'}))+'.x'}));
+assert.throws(()=>validateCloudConfig({...config,url:'http://fixture.supabase.co'}));
+let calls=[];let refreshes=0;let expireOnce=false;
+const client=createCloudClient({config,storage:storage(),fetcher:async(url,opts)=>{calls.push({url,opts});if(url.endsWith('/signup')||url.includes('grant_type=password')||url.includes('refresh_token')){if(url.includes('refresh_token'))refreshes++;return new Response(JSON.stringify({access_token:'fixture-token',refresh_token:'fixture-refresh',user:{id:'fixture-owner'},expires_in:3600}));}if(expireOnce){expireOnce=false;return new Response('',{status:401});}if(url.endsWith('/is_moc_admin'))return new Response('true');return new Response(null,{status:204});}});
+await client.upsertProfile({id:'spoofed-owner',name:'Thảo',consented_at:'2026-10-30T00:00:00Z'});assert.equal(calls.length,2);assert.equal(JSON.parse(calls[1].opts.body).id,'fixture-owner');assert.equal(calls[1].opts.headers.Authorization,'Bearer fixture-token');
+expireOnce=true;await client.upsertProfile({name:'An'});assert.equal(refreshes,1);assert.equal(await client.isAdmin(),true);
+await client.deleteProfile();assert.match(calls.at(-1).url,/id=eq.fixture-owner/);assert.equal(calls.at(-1).opts.method,'DELETE');
+await client.signOut();assert.equal(client.hasSession(),false);
+let unconfiguredCalls=0;const off=createCloudClient({config:{enabled:false},storage:storage(),fetcher:async()=>{unconfiguredCalls++;}});await assert.rejects(off.upsertProfile({name:'An'}));assert.equal(unconfiguredCalls,0);
+const state={name:' Thảo ',profile:{phone:'0901234567',email:'test@example.com',goal:'Chăm tóc',cloudConsentAt:'2026-10-30T00:00:00Z'},records:{'2026-10-29':{morning:true,evening:false},'2026-10-30':{morning:true,evening:true}},photos:[{src:'private-photo',scan:{observations:{scalp:'private-health'}}}],checks:[{note:'private-note'}],morning:'07:30',evening:'20:30'};const payload=profilePayload(state);assert.equal(payload.name,'Thảo');assert.equal(payload.care_summary.total,3);assert.equal(payload.care_summary.lastDate,'2026-10-30');assert(!JSON.stringify(payload).includes('private-'));assert.equal(payload.consented_at,state.profile.cloudConsentAt);
+console.log('CLOUD_CLIENT_PASS: disabled means no requests; public keys only; anonymous identity owns upserts; session refresh/retry; admin role RPC; owned deletion; minimal payload excludes photos and health notes. Uses HTTP fixtures, not a live Supabase project.');

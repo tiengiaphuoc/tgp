@@ -57,3 +57,13 @@ Trong Quét & ghi nhận, app dùng ảnh gần nhất đúng vùng đã chọn 
 Camera tắt khi chụp, tắt thủ công, đóng/thay modal, rời tab hoặc pagehide; yêu cầu cấp quyền trả về muộn cũng bị đóng. Không mở được camera vẫn có ô tải/chụp ảnh thường. Trình duyệt có thể cần HTTPS và quyền camera. Đây là hướng dẫn căn bằng mắt, chưa tự xác nhận hai góc trùng khớp. Kiểm tra camera trong `scripts/alignment-smoke.cjs` dùng luồng video giả lập và xác nhận lớp mờ không bị lưu vào ảnh; chưa thay thế kiểm tra camera vật lý trên từng thiết bị.
 
 Kiểm thử `scripts/transparency-smoke.cjs` đọc pixel từ ảnh chụp khung hiển thị thực để xác nhận hai lớp trộn đúng tỷ lệ, cả với ảnh tải lên và camera giả lập; không chỉ kiểm tra thuộc tính CSS.
+
+## Dữ liệu khách hàng chung (tích hợp Supabase)
+
+`src/cloud-config.js` mặc định `enabled: false`: chưa có dự án, chưa truyền hồ sơ thật. Hướng dẫn có nút sao chép tại `database-setup.html`; chi tiết trong [DATABASE-SETUP.md](docs/DATABASE-SETUP.md). Chỉ publishable/anon key được đưa vào frontend, không dùng service_role. `supabase/setup.sql` tạo bảng, RLS và quyền quản trị.
+
+Khi cấu hình xong: khách đăng nhập ẩn danh theo trình duyệt, chỉ đồng bộ sau khi tự chọn đồng ý; dữ liệu gồm hồ sơ liên hệ và thống kê ghi nhận, không có ảnh/triệu chứng/ghi chú sức khỏe. `admin.html#live` hoặc admin mặc định khi bật Supabase dùng đăng nhập quản trị và quyền máy chủ. `admin.html#demo` giữ bộ dữ liệu mẫu; `#articles` giữ editor xuất bản JSON. Các chức năng mẫu không được coi là dữ liệu thật.
+
+Khách có thể ngừng chia sẻ và xóa hồ sơ chung trong Cá nhân. Đổi máy/xóa trình duyệt có thể tạo danh tính mới, chưa có khôi phục OTP. Ảnh vẫn ở thiết bị. Ghi chú quản trị thật được lưu ở bảng riêng chỉ quản trị viên được truy cập.
+
+Kiểm thử `cloud-client-test.mjs` và `cloud-smoke.cjs` dùng API giả lập. `database-policy-test.mjs` chạy SQL thực bằng PostgreSQL/PGlite để kiểm tra quyền đọc/sửa/xóa, chống giả danh và chặn truy cập ghi chú. Đây chưa phải kiểm thử Supabase Auth/hosting thật; cần thử dự án thật theo tài liệu trước vận hành.
