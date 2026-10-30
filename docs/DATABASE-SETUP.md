@@ -55,7 +55,7 @@ on conflict do nothing;
 
 - Chỉ gửi tên, điện thoại/email tùy chọn, mục tiêu, giờ nhắc và thống kê số lần tự ghi nhận, ngày gần nhất, thời điểm đồng ý. Không gửi ảnh, ghi chú sức khỏe, triệu chứng hoặc kết quả quét.
 - Khách chưa đồng ý: không tạo phiên đăng nhập ẩn danh và không gửi hồ sơ. Quyền được kiểm tra bằng Row Level Security trong database, không chỉ ở giao diện.
-- Danh tính khách gắn với phiên ẩn danh trong trình duyệt. Xóa dữ liệu trình duyệt, đổi điện thoại hoặc dùng trình duyệt khác có thể tạo hồ sơ khác. Chưa có đăng nhập khách bằng OTP/khôi phục liên thiết bị. Số điện thoại/email chưa xác minh.
+- Danh tính khách gắn với phiên ẩn danh trong trình duyệt. Xóa dữ liệu trình duyệt, đổi điện thoại hoặc dùng trình duyệt khác có thể tạo hồ sơ khác. Chưa có đăng nhập khách bằng OTP/khôi phục liên thiết bị. Số điện thoại/email chưa xác minh. Nếu đã mất phiên thiết bị, app không thể xác nhận xóa hồ sơ cũ; cần chủ dự án xử lý hồ sơ đó trong Supabase.
 - Khi rút chia sẻ, chỉ xóa hồ sơ và ghi chú chăm sóc; tài khoản ẩn danh kỹ thuật có thể còn trong Supabase Auth để dùng lại trên thiết bị. Việc xóa toàn bộ tài khoản Auth cần thao tác quản trị máy chủ.
 - Ảnh và nhật ký chi tiết chưa đồng bộ. Thống kê gửi lên là tổng tích lũy, không phải biểu đồ lịch sử hoặc số liệu kinh doanh được xác minh.
 - Quản trị dùng sessionStorage của tab. Đăng xuất để xóa phiên khỏi tab; vẫn cần bảo vệ thiết bị, email và mật khẩu quản trị.
