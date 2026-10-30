@@ -25,6 +25,7 @@ jobs:
       - run: node scripts/articles-test.mjs
       - run: node scripts/alignment-test.mjs
       - run: node scripts/hair-region-test.mjs
+      - run: node scripts/wash-test.mjs
       - run: node scripts/cloud-client-test.mjs
       - name: Test database access policies in PostgreSQL
         run: |
@@ -38,7 +39,7 @@ jobs:
           const expectedPosts = JSON.parse(await readFile('content/posts.json', 'utf8'));
           for (let attempt = 0; attempt < 12; attempt++) {
             try {
-              for (const [path, expected] of [['./', 'Mộcceutics — Chăm tóc'], ['./src/app.js', 'function render()'], ['./src/hair-scan.js', 'measurePixels'], ['./src/scan-alignment.js', 'alignmentchange'], ['./src/hair-region.js', 'mountHairRegion'], ['./src/alignment.css', '.alignment-stage'], ['./src/ai-client.js', 'requestAiAssessment'], ['./src/ai-ui.js', 'aiOverview'], ['./src/theme.css', 'botanical studio'], ['./src/vintage.css', 'sunny botanical'], ['./src/brand.css', 'brand-logo'], ['./src/welcome.css', 'welcome-card'], ['./src/cloud-client.js', 'createCloudClient'], ['./src/live-admin.js', 'startLiveAdmin'], ['./src/cloud-sync.js', 'createProfileSync'], ['./database-setup.html', 'setup-config'], ['./supabase/setup.sql', 'profile_read'], ['./assets/moc-vintage-garden.svg', 'BOTANICAL'], ['./src/article-store.js', 'buildPublication'], ['./src/article-manager.js', 'createArticleManager'], ['./content/posts.json', 'schemaVersion'], ['./src/articles.css', '.cms-editor'], ['./src/style.css', '.sidebar'], ['./admin.html', 'Quản trị chăm sóc'], ['./src/admin.js', 'function shell()'], ['./src/admin.css', '.drawer']]) {
+              for (const [path, expected] of [['./', 'Mộcceutics — Chăm tóc'], ['./src/app.js', 'function render()'], ['./src/hair-scan.js', 'measurePixels'], ['./src/scan-alignment.js', 'alignmentchange'], ['./src/hair-region.js', 'mountHairRegion'], ['./src/alignment.css', '.alignment-stage'], ['./src/ai-client.js', 'requestAiAssessment'], ['./src/ai-ui.js', 'aiOverview'], ['./src/theme.css', 'botanical studio'], ['./src/vintage.css', 'sunny botanical'], ['./src/brand.css', 'brand-logo'], ['./src/welcome.css', 'welcome-card'], ['./src/wash-schedule.js', 'nextWash'], ['./src/wash.css', '.wash-card'], ['./src/cloud-client.js', 'createCloudClient'], ['./src/live-admin.js', 'startLiveAdmin'], ['./src/cloud-sync.js', 'createProfileSync'], ['./database-setup.html', 'setup-config'], ['./supabase/setup.sql', 'profile_read'], ['./assets/moc-vintage-garden.svg', 'BOTANICAL'], ['./src/article-store.js', 'buildPublication'], ['./src/article-manager.js', 'createArticleManager'], ['./content/posts.json', 'schemaVersion'], ['./src/articles.css', '.cms-editor'], ['./src/style.css', '.sidebar'], ['./admin.html', 'Quản trị chăm sóc'], ['./src/admin.js', 'function shell()'], ['./src/admin.css', '.drawer']]) {
                 const response = await fetch(new URL(path, base));
                 if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
                 if (!response.url.startsWith(base.href)) throw new Error('Unexpected redirect: ' + response.url);
