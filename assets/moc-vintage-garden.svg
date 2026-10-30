@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 660" fill="none">
+<defs>
+ <linearGradient id="sky" x2="600" y2="660" gradientUnits="userSpaceOnUse"><stop stop-color="#ffedaa"/><stop offset="1" stop-color="#f0c85f"/></linearGradient>
+ <linearGradient id="sand" x2="0" y2="180"><stop stop-color="#eac163"/><stop offset="1" stop-color="#c99d46"/></linearGradient>
+ <linearGradient id="leaf"><stop stop-color="#b1ba6b"/><stop offset=".5" stop-color="#788b46"/><stop offset="1" stop-color="#455b30"/></linearGradient>
+ <linearGradient id="glass"><stop stop-color="#644a20"/><stop offset=".18" stop-color="#a77a2d"/><stop offset=".38" stop-color="#d9ac53"/><stop offset=".56" stop-color="#bc8a35"/><stop offset="1" stop-color="#62441c"/></linearGradient>
+ <linearGradient id="lid"><stop stop-color="#272d24"/><stop offset=".45" stop-color="#586045"/><stop offset="1" stop-color="#22281f"/></linearGradient>
+ <linearGradient id="stone" x2="0" y2="1"><stop stop-color="#f8e8b7"/><stop offset="1" stop-color="#cdb47b"/></linearGradient>
+ <linearGradient id="label"><stop stop-color="#fff7dc"/><stop offset="1" stop-color="#eddda7"/></linearGradient>
+ <radialGradient id="sun"><stop stop-color="#fff5be"/><stop offset="1" stop-color="#f9db7d"/></radialGradient>
+ <filter id="shadow" x="-60%" y="-30%" width="220%" height="180%"><feDropShadow dx="10" dy="16" stdDeviation="12" flood-color="#6e4c22" flood-opacity=".24"/></filter>
+ <filter id="soft"><feGaussianBlur stdDeviation="10"/></filter>
+ <path id="petal" d="M0 0C-47-44-62-105-30-142C17-136 45-70 0 0Z"/>
+</defs>
+<path fill="url(#sky)" d="M0 0h600v660H0z"/>
+<circle cx="439" cy="126" r="114" stroke="#fff2b0" stroke-width="1.5"/><circle cx="439" cy="126" r="91" stroke="#fff2b0" stroke-width="1.5"/><circle cx="439" cy="126" r="67" fill="url(#sun)"/>
+<path d="M-60 373C58 247 162 312 269 341C406 379 431 256 640 279V660H-60Z" fill="#f7de90"/>
+<path d="M-20 469C139 339 254 390 386 447C479 487 572 383 640 378V660H-20Z" fill="#e7bd5b"/>
+<path d="M-30 584C118 483 357 515 630 485V660H-30Z" fill="#d5ab4f"/>
+<ellipse cx="310" cy="589" rx="189" ry="25" fill="#76562d" opacity=".19" filter="url(#soft)"/>
+<g opacity=".92" stroke="#526539" stroke-width="5" stroke-linecap="round"><path d="M452 550C430 414 458 365 491 265"/><path d="M449 488C486 433 501 417 538 403"/><path d="M443 447C410 403 397 372 389 330"/></g>
+<g fill="url(#leaf)" filter="url(#shadow)"><use href="#petal" transform="translate(467 381) rotate(55) scale(.75)"/><use href="#petal" transform="translate(456 428) rotate(-20) scale(.7)"/><use href="#petal" transform="translate(452 493) rotate(72) scale(.68)"/><use href="#petal" transform="translate(437 442) rotate(-48) scale(.67)"/><use href="#petal" transform="translate(489 308) rotate(23) scale(.65)"/></g>
+<g filter="url(#shadow)"><path d="M149 529H418V569C418 610 149 610 149 569Z" fill="url(#stone)"/><ellipse cx="283.5" cy="530" rx="134.5" ry="33" fill="#fff0c7"/><ellipse cx="283.5" cy="529" rx="116" ry="24" stroke="#e9d7a7"/></g>
+<g transform="rotate(-9 279 360)" filter="url(#shadow)">
+ <rect x="236" y="154" width="73" height="29" rx="5" fill="url(#lid)"/><rect x="252" y="131" width="69" height="27" rx="7" fill="url(#lid)"/><circle cx="309" cy="143" r="3" fill="#c7c8a6"/>
+ <rect x="233" y="181" width="79" height="23" rx="4" fill="#3b422d"/><path d="M233 202C225 212 214 216 214 236V484Q214 511 239 513H307Q333 511 333 484V236C333 218 319 210 312 202Z" fill="url(#glass)"/>
+ <path d="M229 238V479" stroke="#ffe6a3" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"/>
+ <rect x="216" y="280" width="115" height="157" rx="2" fill="url(#label)"/>
+ <circle cx="273" cy="310" r="15" stroke="#9c914c"/><path d="M264 318C262 306 277 300 282 302C282 314 275 317 267 315M265 320L279 305" stroke="#6a7b43" stroke-width="1.5"/>
+ <text x="273" y="346" text-anchor="middle" fill="#34442e" font-family="Georgia,serif" font-size="14" letter-spacing="-.5">Mộcceutics</text>
+ <path d="M243 359H303" stroke="#c9b376"/>
+ <text x="273" y="378" text-anchor="middle" fill="#53613c" font-family="Arial,sans-serif" font-size="8" letter-spacing="1.3">BOTANICAL</text><text x="273" y="391" text-anchor="middle" fill="#53613c" font-family="Arial,sans-serif" font-size="8" letter-spacing="1.3">HAIR CARE</text>
+ <text x="273" y="421" text-anchor="middle" fill="#8c8653" font-family="Arial,sans-serif" font-size="7">100 ml · Minh họa</text>
+</g>
+<g fill="url(#leaf)" filter="url(#shadow)"><use href="#petal" transform="translate(171 566) rotate(-38) scale(.85)"/><use href="#petal" transform="translate(152 569) rotate(-80) scale(.6)"/></g>
+<g stroke="#fff6d3" stroke-width="2" stroke-linecap="round"><path d="M124 184V208M112 196H136"/><path d="M386 251V269M377 260H395"/></g>
+<circle cx="160" cy="260" r="4" fill="#fff4c6"/><circle cx="397" cy="191" r="3" fill="#fff4c6"/>
+</svg>
