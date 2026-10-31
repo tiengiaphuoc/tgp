@@ -61,3 +61,17 @@ on conflict do nothing;
 - Quản trị dùng sessionStorage của tab. Đăng xuất để xóa phiên khỏi tab; vẫn cần bảo vệ thiết bị, email và mật khẩu quản trị.
 - Bài viết vẫn xuất bản bằng JSON; không tự chuyển sang database. Chưa có thông báo đẩy, nhắn tin, thanh toán hoặc xác minh đơn hàng.
 - Kiểm tra giới hạn, sao lưu, khu vực lưu trữ và chính sách quyền riêng tư của dịch vụ trước vận hành. Chưa có dịch vụ Supabase thật trong môi trường phát triển để kiểm thử đầu cuối cho đến khi chủ thương hiệu cấu hình dự án.
+
+## Bộ mã sản phẩm và chính sách tặng app
+
+Chạy thêm `supabase/product-codes.sql` sau `setup.sql`. Nút Sao chép SQL trên trang `database-setup.html` đã gộp hai tệp; nếu đã cài trước đây, chỉ cần chạy tệp bổ sung.
+
+Sau khi cấu hình Supabase, đăng nhập quản trị thật → **Quản lý mã sản phẩm**. Nhập mã đã in (mỗi dòng một mã, tối đa 200/lần), số ngày tặng và hạn kích hoạt tùy chọn. Mặc định 30 trong form chỉ là giá trị khởi đầu để sửa, chưa phải chính sách đã công bố. Hạn ngày tính đến cuối ngày giờ Việt Nam. Có nút tạo 20 mã ngẫu nhiên mạnh; cần lưu vào hệ thống rồi mới in/gửi cho khách. Không đăng bộ mã thật lên GitHub, không gửi qua chat công khai. Không có mã thực được tạo trong source.
+
+Khách nhập mã ở lần khai báo đầu hoặc trong Cá nhân, lưu hồ sơ và đồng ý chia sẻ. Khi lưu, app kiểm tra/kích hoạt qua máy chủ; có nút kiểm tra lại trong phần ưu đãi. Chưa cấu hình hoặc lỗi mạng: mã chỉ là dữ liệu chưa xác thực, không tự cấp quyền. Kiểm tra bên quản trị không tiêu thụ mã.
+
+Một mã dùng cho một hồ sơ; gửi lại cùng mã không gia hạn thêm; mã mua tiếp còn hợp lệ sẽ cộng số ngày vào quyền đang còn (hoặc tính từ hiện tại khi quyền đã hết). Mã hết hạn kích hoạt/bị khóa không được dùng mới. Khóa mã không rút lại quyền đã tặng. Mã trùng trong đợt nhập được bỏ qua, không sửa thời hạn mã cũ. Máy chủ khóa giao dịch để tránh dùng hai lần, giới hạn 8 lần thử/15 phút theo danh tính thiết bị.
+
+Quyền lợi và lịch sử đổi mã lưu riêng ở máy chủ, khách không tự sửa thời hạn. Chúng không bị đặt lại khi khách xóa hồ sơ liên hệ; lịch sử mã đã dùng được giữ để ngăn tái sử dụng, kể cả khi tài khoản Auth bị xóa (ID có thể được bỏ nhưng mã vẫn đã dùng). Khách đổi máy/xóa trình duyệt chưa khôi phục được quyền bằng OTP; cần thương hiệu hỗ trợ, không tự chuyển quyền chỉ vì trùng số điện thoại chưa xác minh.
+
+Đây là quản lý thời gian ưu đãi. App hiện vẫn là bản trải nghiệm miễn phí, chưa thu tiền hoặc triển khai khóa tính năng trả phí. Khi triển khai tính năng có phí, API phía máy chủ cũng phải kiểm tra entitlement; không dùng nhãn hiển thị/localStorage làm cơ chế chặn quyền.

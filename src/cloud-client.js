@@ -19,11 +19,13 @@ export function createCloudClient({config=cloudConfig,storage=localStorage,sessi
   if(!response.ok){const error=new Error(response.status===401?'Phiên đăng nhập hết hạn. Vui lòng thử đăng nhập lại.':response.status===403?'Tài khoản chưa có quyền truy cập dữ liệu này.':'Chưa kết nối được dữ liệu. Kiểm tra mạng và cấu hình Supabase.');error.status=response.status;throw error;}
   return response.status===204?null:response.text().then(text=>text?JSON.parse(text):null);
  }
- async function auth({anonymous=false}={}){
+ async function authImpl({anonymous=false}={}){
   if(!session){if(!anonymous)throw new Error('Vui lòng đăng nhập quản trị.');return saveSession(await request('/auth/v1/signup',{method:'POST',body:{data:{app:'mocceutics'}}}));}
   if(session.expires_at<=Math.floor(Date.now()/1000)+60)saveSession(await request('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:session.refresh_token}}));
   return session;
  }
+ let authPending=null;
+ async function auth(options={}){if(authPending)return authPending;authPending=authImpl(options);try{return await authPending;}finally{authPending=null;}}
  async function rest(path,options={}){const current=await auth();try{return await request(path,{...options,token:current.access_token});}catch(error){if(error.status!==401)throw error;session.expires_at=0;const refreshed=await auth();return request(path,{...options,token:refreshed.access_token});}}
  return {configured,hasSession:()=>!!session,
   async signIn(email,password){const result=await request('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password}});saveSession(result);return result;},
@@ -32,11 +34,17 @@ export function createCloudClient({config=cloudConfig,storage=localStorage,sessi
   async deleteProfile(){const current=await auth();return rest('/rest/v1/customer_profiles?id=eq.'+encodeURIComponent(current.user.id),{method:'DELETE'});},
   async isAdmin(){return (await rest('/rest/v1/rpc/is_moc_admin',{method:'POST',body:{}}))===true;},
   async profiles({offset=0,limit=100}={}){return rest(`/rest/v1/customer_profiles?select=*&order=updated_at.desc&limit=${limit}&offset=${offset}`);},
+  async redeemCode(code){return rest('/rest/v1/rpc/redeem_product_code',{method:'POST',body:{input_code:code}});},
+  async entitlement(){const current=await auth();const rows=await rest('/rest/v1/product_entitlements?user_id=eq.'+encodeURIComponent(current.user.id)+'&select=valid_until');return rows[0]||null;},
+  async listCodes(offset=0){return rest('/rest/v1/product_codes?select=*,product_redemptions(user_id,redeemed_at,granted_until)&order=created_at.desc,code&limit=100&offset='+offset);},
+  async importCodes(codes,days,expires){return rest('/rest/v1/rpc/import_product_codes',{method:'POST',body:{codes,days,expires}});},
+  async checkCode(code){return rest('/rest/v1/rpc/check_product_code',{method:'POST',body:{input_code:code}});},
+  async toggleCode(code,enabled){return rest('/rest/v1/product_codes?code=eq.'+encodeURIComponent(code),{method:'PATCH',body:{enabled},headers:{Prefer:'return=minimal'}});},
   async getNote(id){const rows=await rest('/rest/v1/customer_notes?customer_id=eq.'+encodeURIComponent(id)+'&select=note');return rows[0]?.note||'';},
   async saveNote(id,note){return rest('/rest/v1/customer_notes?on_conflict=customer_id',{method:'POST',body:{customer_id:id,note},headers:{Prefer:'resolution=merge-duplicates,return=minimal'}});}
  };
 }
 export function profilePayload(state){
  const records=Object.entries(state.records||{});const times=records.filter(([,r])=>r?.morning||r?.evening).map(([date])=>date).sort();
- return {name:String(state.name||'').trim().slice(0,40),phone:String(state.profile?.phone||'').slice(0,24),email:String(state.profile?.email||'').slice(0,120),goal:String(state.profile?.goal||'').slice(0,120),consented_at:state.profile?.cloudConsentAt,care_summary:{total:records.reduce((n,[,r])=>n+Number(!!r?.morning)+Number(!!r?.evening),0),days:times.length,lastDate:times.at(-1)||null,morning:state.morning,evening:state.evening}};
+ return {name:String(state.name||'').trim().slice(0,40),phone:String(state.profile?.phone||'').slice(0,24),email:String(state.profile?.email||'').slice(0,120),goal:String(state.profile?.goal||'').slice(0,120),product_code_input:String(state.profile?.productCode||'').slice(0,64),consented_at:state.profile?.cloudConsentAt,care_summary:{total:records.reduce((n,[,r])=>n+Number(!!r?.morning)+Number(!!r?.evening),0),days:times.length,lastDate:times.at(-1)||null,morning:state.morning,evening:state.evening}};
 }
