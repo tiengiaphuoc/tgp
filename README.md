@@ -67,3 +67,7 @@ Khi cấu hình xong: khách đăng nhập ẩn danh theo trình duyệt, chỉ 
 Khách có thể ngừng chia sẻ và xóa hồ sơ chung trong Cá nhân. Đổi máy/xóa trình duyệt có thể tạo danh tính mới, chưa có khôi phục OTP. Ảnh vẫn ở thiết bị. Ghi chú quản trị thật được lưu ở bảng riêng chỉ quản trị viên được truy cập.
 
 Kiểm thử `cloud-client-test.mjs` và `cloud-smoke.cjs` dùng API giả lập. `database-policy-test.mjs` chạy SQL thực bằng PostgreSQL/PGlite để kiểm tra quyền đọc/sửa/xóa, chống giả danh và chặn truy cập ghi chú. Đây chưa phải kiểm thử Supabase Auth/hosting thật; cần thử dự án thật theo tài liệu trước vận hành.
+
+## Hồ sơ tóc và lộ trình tự khai
+
+Trong hồ sơ ban đầu/Cá nhân, mục mở rộng có dáng tóc, cảm nhận tơi xốp, da đầu thường gặp, nhạy cảm/gàu (chọn nhiều), vấn đề khô xơ/rụng/hóa chất (chọn nhiều), nhóm tuổi và giới tính tùy chọn. Các trường `profile.careProfile` chỉ ở thiết bị, không được đưa vào `profilePayload` chia sẻ lên hệ thống. Lộ trình tạo gợi ý giáo dục từ lựa chọn, không chẩn đoán hoặc kê điều trị; giới tính không tự quyết định thuốc/liều. Người dưới 18 được nhắc kiểm tra phù hợp nhãn với phụ huynh/chuyên môn, không tự áp dụng liều người lớn. Tóc tơi xốp là cảm nhận riêng, không đồng nhất với tóc xoăn hay kết quả đo độ xốp.
