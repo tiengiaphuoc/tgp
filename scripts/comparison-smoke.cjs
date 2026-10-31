@@ -4,7 +4,7 @@ const assert=require('node:assert/strict');
 (async()=>{
  const browser=await chromium.launch({executablePath:process.env.MOC_CHROME_PATH||undefined,headless:true,args:['--no-sandbox']});
  try{
-  const page=await browser.newPage({viewport:{width:390,height:844}});
+  const page=await browser.newPage({viewport:{width:390,height:844}});await prepareTestProfile(page);
   await page.addInitScript(()=>Object.defineProperty(navigator.mediaDevices,'getUserMedia',{value:async()=>{const c=document.createElement('canvas');c.width=300;c.height=400;const ctx=c.getContext('2d');ctx.fillStyle='lime';ctx.fillRect(0,0,300,400);return c.captureStream(12);}}));
   await page.goto((process.env.MOC_APP_URL||'http://localhost:3000/')+'#progress');
   await page.evaluate(()=>{const c=document.createElement('canvas');c.width=300;c.height=400;const ctx=c.getContext('2d');ctx.fillStyle='red';ctx.fillRect(0,0,300,400);localStorage.setItem('moc-care',JSON.stringify({photos:[{id:'reference-red',angle:'Đường ngôi',date:'01/10/2026',src:c.toDataURL()}]}));});
