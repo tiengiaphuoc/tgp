@@ -1,4 +1,4 @@
-import {createCloudClient,profilePayload} from './cloud-client.js?v=codes-11';
+import {createCloudClient,profilePayload} from './cloud-client.js?v=email-17';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function createProfileSync(getState){
  const client=createCloudClient();let timer,running=null,revision=0,stopping=false,status='Chưa chia sẻ hồ sơ',retryDelay=2000;
@@ -10,7 +10,7 @@ export function createProfileSync(getState){
  }
  function schedule(){revision++;if(!configured||stopping)return;clearTimeout(timer);if(!getState().profile?.cloudConsentAt){show('Chưa chia sẻ hồ sơ');return;}show('Đang chờ gửi hồ sơ…');timer=setTimeout(flush,600);}
  window.addEventListener('online',schedule);
- return {configured,schedule,statusText:()=>status,
+ return {configured,schedule,statusText:()=>status,emailRequired:()=>configured&&client.emailVerificationRequired(),currentUser:()=>client.currentUser(),sendEmailOtp:email=>client.sendEmailOtp(email),confirmEmailOtp:(email,token,challenge)=>client.confirmEmailOtp(email,token,challenge),
   async redeemCode(code){if(!configured)throw new Error('Cần kết nối cơ sở dữ liệu trước khi xác thực mã.');if(!getState().profile?.cloudConsentAt)throw new Error('Lưu hồ sơ và đồng ý chia sẻ để xác thực mã.');await client.upsertProfile(profilePayload(getState()));return client.redeemCode(code);},
   async entitlement(){if(!configured||!getState().profile?.cloudConsentAt||!client.hasSession())return null;return client.entitlement();},
   consentField(){return configured?`<label class="cloud-consent"><input name="cloudConsent" type="checkbox" ${getState().profile?.cloudConsentAt?'checked disabled':''}>Tôi đồng ý gửi tên, thông tin liên hệ, mục tiêu chăm tóc, mã sản phẩm và thống kê ghi nhận cho đội chăm sóc Mộcceutics. Không gửi ảnh tóc hoặc ghi chú sức khỏe.</label>`:'';},

@@ -75,3 +75,9 @@ Trong hồ sơ ban đầu/Cá nhân, mục mở rộng có dáng tóc, cảm nh�
 ## Bước hoàn tất hồ sơ trước khi dùng app
 
 Nếu tên, email đúng định dạng, mã sản phẩm đúng định dạng hoặc dấu mốc đã lưu hồ sơ còn thiếu, app chỉ dựng màn hình khai báo riêng; không dựng thanh điều hướng, bài viết hay các chức năng theo dõi. Áp dụng cả link mở thẳng vào các mục và hồ sơ cũ. Chỉ mở app sau khi lưu local thành công; giữ nguyên ảnh/nhật ký cũ và trang đích. Đây là điều kiện giao diện để hoàn tất hồ sơ, không phải cơ chế đăng nhập/phân quyền máy chủ hay xác minh mã thực. Mã hợp lệ theo bộ mã vẫn cần Supabase.
+
+## Xác nhận email
+
+Khi Supabase đã bật, khách nhận mã qua email và xác nhận với Supabase Auth trước khi mở app. Phiên đã có được kiểm tra lại qua Auth khi tải trang; không dùng cờ tự khai trong hồ sơ làm bằng chứng. `supabase/email-verification.sql` chạy cuối cùng sau SQL cơ bản/mã sản phẩm để kiểm tra email đã xác nhận và khớp ở phía database. Xem cấu hình SMTP, mẫu email Token/ConfirmationURL và Secure Email Change trong `docs/DATABASE-SETUP.md`.
+
+Hiện `cloudConfig.enabled:false`: chưa gửi email thật, chưa bật điều kiện xác nhận hộp thư; bản trải nghiệm ghi rõ chỉ kiểm tra định dạng. Kiểm thử email dùng Auth giả lập và PostgreSQL/PGlite, không chứng minh SMTP thực đã được cấu hình. Không đặt `emailVerificationRequired:false` trong vận hành thật (các bài kiểm tra chức năng cũ dùng cờ này để cô lập luồng OTP).

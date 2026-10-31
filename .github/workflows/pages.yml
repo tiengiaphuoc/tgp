@@ -28,11 +28,13 @@ jobs:
       - run: node scripts/wash-test.mjs
       - run: node scripts/care-profile-test.mjs
       - run: node scripts/cloud-client-test.mjs
+      - run: node scripts/email-client-test.mjs
       - name: Test database access policies in PostgreSQL
         run: |
           npm install --prefix "$RUNNER_TEMP/moc-db" --no-save --ignore-scripts @electric-sql/pglite@0.5.13
           MOC_PGLITE_PATH="$RUNNER_TEMP/moc-db/node_modules/@electric-sql/pglite/dist/index.js" node scripts/database-policy-test.mjs
           MOC_PGLITE_PATH="$RUNNER_TEMP/moc-db/node_modules/@electric-sql/pglite/dist/index.js" node scripts/product-codes-policy-test.mjs
+          MOC_PGLITE_PATH="$RUNNER_TEMP/moc-db/node_modules/@electric-sql/pglite/dist/index.js" node scripts/email-verification-policy-test.mjs
       - name: Verify public app and assets
         run: |
           node --input-type=module <<'JS'
@@ -41,7 +43,7 @@ jobs:
           const expectedPosts = JSON.parse(await readFile('content/posts.json', 'utf8'));
           for (let attempt = 0; attempt < 12; attempt++) {
             try {
-              for (const [path, expected] of [['./', 'Mộcceutics — Chăm tóc'], ['./src/app.js', 'function render()'], ['./src/hair-scan.js', 'measurePixels'], ['./src/scan-alignment.js', 'alignmentchange'], ['./src/hair-region.js', 'mountHairRegion'], ['./src/alignment.css', '.alignment-stage'], ['./src/ai-client.js', 'requestAiAssessment'], ['./src/ai-ui.js', 'aiOverview'], ['./src/theme.css', 'botanical studio'], ['./src/vintage.css', 'sunny botanical'], ['./src/brand.css', 'brand-logo'], ['./src/welcome.css', 'welcome-card'], ['./src/wash-schedule.js', 'nextWash'], ['./src/wash.css', '.wash-card'], ['./src/product-access.js', 'createProductAccess'], ['./src/care-profile.js', 'personalCarePlan'], ['./src/care-profile.css', '.personal-care'], ['./src/navigation.css', '.nav-short'], ['./supabase/product-codes.sql', 'redeem_product_code'], ['./src/cloud-client.js', 'createCloudClient'], ['./src/live-admin.js', 'startLiveAdmin'], ['./src/cloud-sync.js', 'createProfileSync'], ['./database-setup.html', 'setup-config'], ['./supabase/setup.sql', 'profile_read'], ['./assets/moc-vintage-garden.svg', 'BOTANICAL'], ['./src/article-store.js', 'buildPublication'], ['./src/article-manager.js', 'createArticleManager'], ['./content/posts.json', 'schemaVersion'], ['./src/articles.css', '.cms-editor'], ['./src/style.css', '.sidebar'], ['./admin.html', 'Quản trị chăm sóc'], ['./src/admin.js', 'function shell()'], ['./src/admin.css', '.drawer']]) {
+              for (const [path, expected] of [['./', 'Mộcceutics — Chăm tóc'], ['./src/app.js', 'function render()'], ['./src/hair-scan.js', 'measurePixels'], ['./src/scan-alignment.js', 'alignmentchange'], ['./src/hair-region.js', 'mountHairRegion'], ['./src/alignment.css', '.alignment-stage'], ['./src/ai-client.js', 'requestAiAssessment'], ['./src/ai-ui.js', 'aiOverview'], ['./src/theme.css', 'botanical studio'], ['./src/vintage.css', 'sunny botanical'], ['./src/brand.css', 'brand-logo'], ['./src/welcome.css', 'welcome-card'], ['./src/wash-schedule.js', 'nextWash'], ['./src/wash.css', '.wash-card'], ['./src/product-access.js', 'createProductAccess'], ['./src/care-profile.js', 'personalCarePlan'], ['./src/care-profile.css', '.personal-care'], ['./src/navigation.css', '.nav-short'], ['./src/email-verification.js', 'createEmailVerification'], ['./supabase/email-verification.sql', 'moc_email_verified'], ['./supabase/product-codes.sql', 'redeem_product_code'], ['./src/cloud-client.js', 'createCloudClient'], ['./src/live-admin.js', 'startLiveAdmin'], ['./src/cloud-sync.js', 'createProfileSync'], ['./database-setup.html', 'setup-config'], ['./supabase/setup.sql', 'profile_read'], ['./assets/moc-vintage-garden.svg', 'BOTANICAL'], ['./src/article-store.js', 'buildPublication'], ['./src/article-manager.js', 'createArticleManager'], ['./content/posts.json', 'schemaVersion'], ['./src/articles.css', '.cms-editor'], ['./src/style.css', '.sidebar'], ['./admin.html', 'Quản trị chăm sóc'], ['./src/admin.js', 'function shell()'], ['./src/admin.css', '.drawer']]) {
                 const response = await fetch(new URL(path, base));
                 if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
                 if (!response.url.startsWith(base.href)) throw new Error('Unexpected redirect: ' + response.url);

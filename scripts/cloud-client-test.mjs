@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {createCloudClient,validateCloudConfig,profilePayload} from '../src/cloud-client.js';
-const config={enabled:true,url:'https://fixture.supabase.co',publishableKey:'sb_publishable_fixture'};
+const config={enabled:true,url:'https://fixture.supabase.co',publishableKey:'sb_publishable_fixture',emailVerificationRequired:false};
 const storage=()=>{const s=new Map();return {getItem:k=>s.get(k),setItem:(k,v)=>s.set(k,v),removeItem:k=>s.delete(k)};};
 assert.equal(validateCloudConfig({enabled:false}),false);assert.equal(validateCloudConfig(config),true);
 assert.throws(()=>validateCloudConfig({...config,publishableKey:'sb_secret_fixture'}));

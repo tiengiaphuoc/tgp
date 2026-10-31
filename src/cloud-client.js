@@ -30,7 +30,23 @@ export function createCloudClient({config=cloudConfig,storage=localStorage,sessi
  return {configured,hasSession:()=>!!session,
   async signIn(email,password){const result=await request('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password}});saveSession(result);return result;},
   async signOut(){try{if(session)await request('/auth/v1/logout',{method:'POST',token:session.access_token});}finally{saveSession(null);}},
-  async upsertProfile(payload){const current=await auth({anonymous:true});const body={...payload,id:current.user.id};return rest('/rest/v1/customer_profiles?on_conflict=id',{method:'POST',body,headers:{Prefer:'resolution=merge-duplicates,return=minimal'}});},
+  emailVerificationRequired:()=>configured()&&config.emailVerificationRequired!==false,
+  async currentUser(){if(!session)return null;const current=await auth();return request('/auth/v1/user',{token:current.access_token});},
+  async sendEmailOtp(email){
+   if(session){const current=await auth();const user=await request('/auth/v1/user',{token:current.access_token});if(user.email?.toLowerCase()!==email.toLowerCase()||!user.email_confirmed_at){await request('/auth/v1/user',{method:'PUT',token:current.access_token,body:{email}});return {type:'email_change',owner:user.id};}}
+   await request('/auth/v1/otp',{method:'POST',body:{email,create_user:true}});return {type:'email',owner:session?.user?.id||null};
+  },
+  async confirmEmailOtp(email,token,challenge){
+   const data=await request('/auth/v1/verify',{method:'POST',body:{email,token,type:challenge.type}});
+   if(challenge.owner&&data.user?.id&&data.user.id!==challenge.owner)throw new Error('Phiên xác nhận không khớp hồ sơ.');
+   if(!data.access_token&&!session)throw new Error('Chưa xác nhận được email.');
+   const current=data.access_token?data:await auth();const user=await request('/auth/v1/user',{token:current.access_token});
+   if(!user.email_confirmed_at||user.email?.toLowerCase()!==email.toLowerCase()||(challenge.owner&&user.id!==challenge.owner))throw new Error('Email chưa được xác nhận đầy đủ. Nếu đổi email, có thể cần xác nhận cả hộp thư cũ và mới.');
+   if(data.access_token)saveSession({...data,user});
+   return user;
+  },
+  async upsertProfile(payload){const current=await auth({anonymous:config.emailVerificationRequired===false});
+   if(config.emailVerificationRequired!==false){const user=await request('/auth/v1/user',{token:current.access_token});if(!user.email_confirmed_at||user.email?.toLowerCase()!==payload.email?.toLowerCase())throw new Error('Cần xác nhận đúng email trước khi gửi hồ sơ.');}const body={...payload,id:current.user.id};return rest('/rest/v1/customer_profiles?on_conflict=id',{method:'POST',body,headers:{Prefer:'resolution=merge-duplicates,return=minimal'}});},
   async deleteProfile(){const current=await auth();return rest('/rest/v1/customer_profiles?id=eq.'+encodeURIComponent(current.user.id),{method:'DELETE'});},
   async isAdmin(){return (await rest('/rest/v1/rpc/is_moc_admin',{method:'POST',body:{}}))===true;},
   async profiles({offset=0,limit=100}={}){return rest(`/rest/v1/customer_profiles?select=*&order=updated_at.desc&limit=${limit}&offset=${offset}`);},

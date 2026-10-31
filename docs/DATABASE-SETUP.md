@@ -8,7 +8,7 @@ Hướng dẫn có nút sao chép: https://tiengiaphuoc.github.io/tgp/database-s
 
 1. Vào https://supabase.com/dashboard và tạo tài khoản/dự án riêng của thương hiệu. Chọn khu vực Singapore nếu phù hợp; xem mức phí và giới hạn trước khi tạo.
 2. Trong SQL Editor, mở một truy vấn, dán toàn bộ nội dung `supabase/setup.sql`, bấm Run. Tệp không chứa dữ liệu khách.
-3. Authentication → Sign In / Providers → Anonymous Sign-Ins: bật đăng nhập ẩn danh. Đây là danh tính thiết bị, khách không nhập mật khẩu. Anonymous sign-in có giới hạn tốc độ; có thể cần thiết lập CAPTCHA và công suất trước khi chạy chiến dịch đông người. App hiện chưa tích hợp CAPTCHA.
+3. Thiết lập Email OTP theo mục “Xác nhận hộp thư khách hàng” bên dưới: bật Email/Confirm email, SMTP và mẫu thư có mã. Luồng mới không cần tạo tài khoản ẩn danh; phiên ẩn danh cũ được liên kết email trên cùng ID. Kiểm tra giới hạn tốc độ, khả năng gửi và chống lạm dụng trước khi mời nhiều khách. App hiện chưa tích hợp CAPTCHA.
 
 ## 2. Bật kết nối cho toàn bộ khách
 
@@ -75,3 +75,16 @@ Một mã dùng cho một hồ sơ; gửi lại cùng mã không gia hạn thêm
 Quyền lợi và lịch sử đổi mã lưu riêng ở máy chủ, khách không tự sửa thời hạn. Chúng không bị đặt lại khi khách xóa hồ sơ liên hệ; lịch sử mã đã dùng được giữ để ngăn tái sử dụng, kể cả khi tài khoản Auth bị xóa (ID có thể được bỏ nhưng mã vẫn đã dùng). Khách đổi máy/xóa trình duyệt chưa khôi phục được quyền bằng OTP; cần thương hiệu hỗ trợ, không tự chuyển quyền chỉ vì trùng số điện thoại chưa xác minh.
 
 Đây là quản lý thời gian ưu đãi. App hiện vẫn là bản trải nghiệm miễn phí, chưa thu tiền hoặc triển khai khóa tính năng trả phí. Khi triển khai tính năng có phí, API phía máy chủ cũng phải kiểm tra entitlement; không dùng nhãn hiển thị/localStorage làm cơ chế chặn quyền.
+
+## Xác nhận hộp thư khách hàng trước khi mở app
+
+Phần xác nhận email được bật tự động khi `cloudConfig.enabled: true` (không đặt `emailVerificationRequired: false` trong vận hành thật). Khi chưa cấu hình Supabase, bản trải nghiệm vẫn chỉ kiểm tra định dạng và hiển thị rõ xác nhận hộp thư chưa bật; chưa có email nào được gửi thật. Không tạo mã OTP trong trình duyệt, không ghi log/lưu mã vào localStorage.
+
+1. Chạy `supabase/email-verification.sql` **sau** hai tệp SQL cơ bản/mã sản phẩm. Nút sao chép thiết lập đã gộp đủ ba tệp theo đúng thứ tự. Nếu chạy lại các tệp, luôn chạy xác nhận email cuối cùng.
+2. Authentication → Email: bật Confirm email. Cấu hình **SMTP riêng**, tên miền gửi và giới hạn gửi phù hợp để gửi cho khách thật. Email mặc định của Supabase bị hạn chế người nhận/công suất, không nên coi là dịch vụ gửi cho toàn bộ khách. Không gửi mật khẩu SMTP hoặc service_role trong chat/mã frontend.
+3. Email Templates → Magic Link và Change Email Address: thêm `{{ .Token }}` để khách nhận mã số. Giữ thêm liên kết `{{ .ConfirmationURL }}` trong mẫu đổi email để hỗ trợ xác nhận an toàn ở cả hai hộp thư. Đặt Site URL/Redirect URLs về địa chỉ GitHub Pages của app. Sau khi mở các liên kết đổi email, khách bấm “Kiểm tra lại trạng thái xác nhận” trên cùng thiết bị. Kiểm tra Token Length khớp 6–10 chữ số, hạn mã và giới hạn gửi. Tạo thông điệp tiếng Việt có tên thương hiệu. Giữ Secure Email Change; khi đổi email đã xác nhận, có thể cần xác nhận cả hộp thư cũ và mới.
+4. Khách nhập email, bấm Gửi mã, nhập mã thực nhận, bấm Xác nhận email, rồi mới lưu hồ sơ để mở app. Gửi lại có đếm chờ tối thiểu 60 giây; máy chủ tiếp tục áp giới hạn riêng. Không suy ra “email tồn tại” từ gửi yêu cầu thành công.
+5. App đọc lại Supabase Auth để kiểm tra `email_confirmed_at` và email khớp. Không tin cờ “đã xác nhận” do người dùng tự nhập trong hồ sơ. Sau khi tải lại trang cần kiểm tra phiên qua mạng. Không có phiên/không xác nhận được: chưa mở nội dung app trong chế độ xác nhận thật.
+6. Hồ sơ ẩn danh đã tồn tại được liên kết/xác nhận email trên cùng User ID bằng quy trình đổi email để giữ mã sản phẩm và quyền lợi. Nếu không có phiên, dùng email OTP để đăng nhập/tạo danh tính email. Không tự chuyển dữ liệu local của một người dùng chung thiết bị sang hồ sơ đã có của người khác; kiểm tra quy trình đổi thiết bị với dữ liệu thử trước vận hành. Ảnh local vẫn chưa tự đồng bộ giữa thiết bị.
+
+SQL mới yêu cầu email đã xác nhận và trùng với email Auth khi tạo/sửa hồ sơ và kích hoạt mã sản phẩm. Nó không thay cho việc bảo vệ API tính năng có phí sau này. Đây là kiểm chứng quyền truy cập hộp thư tại thời điểm xác nhận, không xác minh danh tính thật hay bảo đảm khách luôn nhận được email trong tương lai.
