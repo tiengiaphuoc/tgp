@@ -1,6 +1,7 @@
+const {prepareTestProfile}=require('./profile-fixture.cjs');
 const {chromium}=require(process.env.MOC_PLAYWRIGHT_PATH||'playwright');const assert=require('node:assert/strict');
 (async()=>{const b=await chromium.launch({executablePath:process.env.MOC_CHROME_PATH||undefined,headless:true,args:['--no-sandbox']});try{
- const p=await b.newPage({viewport:{width:390,height:844}});const errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto((process.env.MOC_APP_URL||'http://localhost:3000/')+'#progress');await p.locator('[data-action="photo"]').first().click();
+ const p=await b.newPage({viewport:{width:390,height:844}});await prepareTestProfile(p);const errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto((process.env.MOC_APP_URL||'http://localhost:3000/')+'#progress');await p.locator('[data-action="photo"]').first().click();
  const fixture=await p.evaluate(()=>{const c=document.createElement('canvas');c.width=c.height=1000;const x=c.getContext('2d');x.fillStyle='white';x.fillRect(0,0,1000,1000);x.fillStyle='black';x.fillRect(200,200,600,600);return c.toDataURL().split(',')[1];});
  await p.locator('[name="photo"]').setInputFiles({name:'black-region-white-background.png',mimeType:'image/png',buffer:Buffer.from(fixture,'base64')});await p.locator('.hair-region-preview img').waitFor({state:'visible'});await p.locator('.hair-region-preview img').evaluate(i=>i.decode());
  await p.locator('#hair-region-size').fill('40');await p.locator('#hair-region-x').fill('50');await p.locator('#hair-region-y').fill('50');

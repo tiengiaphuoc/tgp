@@ -1,3 +1,4 @@
+const {prepareTestProfile}=require('./profile-fixture.cjs');
 const {chromium}=require(process.env.MOC_PLAYWRIGHT_PATH||'playwright');
 const assert=require('node:assert/strict');
 (async()=>{

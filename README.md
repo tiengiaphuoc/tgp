@@ -71,3 +71,7 @@ Kiểm thử `cloud-client-test.mjs` và `cloud-smoke.cjs` dùng API giả lập
 ## Hồ sơ tóc và lộ trình tự khai
 
 Trong hồ sơ ban đầu/Cá nhân, mục mở rộng có dáng tóc, cảm nhận tơi xốp, da đầu thường gặp, nhạy cảm/gàu (chọn nhiều), vấn đề khô xơ/rụng/hóa chất (chọn nhiều), nhóm tuổi và giới tính tùy chọn. Các trường `profile.careProfile` chỉ ở thiết bị, không được đưa vào `profilePayload` chia sẻ lên hệ thống. Lộ trình tạo gợi ý giáo dục từ lựa chọn, không chẩn đoán hoặc kê điều trị; giới tính không tự quyết định thuốc/liều. Người dưới 18 được nhắc kiểm tra phù hợp nhãn với phụ huynh/chuyên môn, không tự áp dụng liều người lớn. Tóc tơi xốp là cảm nhận riêng, không đồng nhất với tóc xoăn hay kết quả đo độ xốp.
+
+## Bước hoàn tất hồ sơ trước khi dùng app
+
+Nếu tên, email đúng định dạng, mã sản phẩm đúng định dạng hoặc dấu mốc đã lưu hồ sơ còn thiếu, app chỉ dựng màn hình khai báo riêng; không dựng thanh điều hướng, bài viết hay các chức năng theo dõi. Áp dụng cả link mở thẳng vào các mục và hồ sơ cũ. Chỉ mở app sau khi lưu local thành công; giữ nguyên ảnh/nhật ký cũ và trang đích. Đây là điều kiện giao diện để hoàn tất hồ sơ, không phải cơ chế đăng nhập/phân quyền máy chủ hay xác minh mã thực. Mã hợp lệ theo bộ mã vẫn cần Supabase.
