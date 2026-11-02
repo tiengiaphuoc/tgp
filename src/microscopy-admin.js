@@ -1,5 +1,5 @@
-import {mountImageUpload} from './microscopy-images.js?v=images-22';
-import {microscopyStatuses,vnd}from'./microscopy.js?v=images-22';
+import {mountImageUpload} from './microscopy-images.js?v=results-23';
+import {microscopyStatuses,vnd}from'./microscopy.js?v=results-23';
 const nextStates={submitted:['submitted','approved','rejected'],approved:['approved','sample_received','rejected'],sample_received:['sample_received','analysing'],analysing:['analysing','completed'],completed:['completed'],rejected:['rejected'],cancelled:['cancelled']};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function mountMicroscopyAdmin(root,client){let offset=0;

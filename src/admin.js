@@ -1,5 +1,5 @@
 import {cloudConfig} from './cloud-config.js';
-import {startLiveAdmin} from './live-admin.js?v=images-22';
+import {startLiveAdmin} from './live-admin.js?v=results-23';
 import {loadPublication} from './article-store.js';
 import {createArticleManager} from './article-manager.js?v=export-18';
 const articlePublication=await loadPublication();
