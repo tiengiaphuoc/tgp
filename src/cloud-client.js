@@ -56,6 +56,9 @@ export function createCloudClient({config=cloudConfig,storage=localStorage,sessi
   async importCodes(codes,days,expires,purchaseValue){return rest('/rest/v1/rpc/'+(purchaseValue===undefined?'import_product_codes':'import_product_codes_value'),{method:'POST',body:{codes,days,expires,...(purchaseValue===undefined?{}:{purchase_value:purchaseValue})}});},
   async checkCode(code){return rest('/rest/v1/rpc/check_product_code',{method:'POST',body:{input_code:code}});},
   async toggleCode(code,enabled){return rest('/rest/v1/product_codes?code=eq.'+encodeURIComponent(code),{method:'PATCH',body:{enabled},headers:{Prefer:'return=minimal'}});},
+  async listPromotions(offset=0){return rest('/rest/v1/promotions?select=*&order=updated_at.desc,id&limit=100&offset='+offset);},
+  async savePromotion(row){return rest('/rest/v1/promotions?on_conflict=id',{method:'POST',body:row,headers:{Prefer:'resolution=merge-duplicates,return=minimal'}});},
+  async deletePromotion(id){return rest('/rest/v1/promotions?id=eq.'+encodeURIComponent(id),{method:'DELETE'});},
   async microscopyImages(id){return rest('/rest/v1/microscopy_images?request_id=eq.'+encodeURIComponent(id)+'&select=*&order=created_at.asc');},
   async microscopyImageUrl(path){const result=await rest('/storage/v1/object/sign/microscopy-results/'+path,{method:'POST',body:{expiresIn:300}});return new URL('/storage/v1'+result.signedURL,root()).href;},
   async uploadMicroscopyImage(id,file,details){
