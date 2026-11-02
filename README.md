@@ -81,3 +81,7 @@ Nếu tên, email đúng định dạng, mã sản phẩm đúng định dạng 
 Khi Supabase đã bật, khách nhận mã qua email và xác nhận với Supabase Auth trước khi mở app. Phiên đã có được kiểm tra lại qua Auth khi tải trang; không dùng cờ tự khai trong hồ sơ làm bằng chứng. `supabase/email-verification.sql` chạy cuối cùng sau SQL cơ bản/mã sản phẩm để kiểm tra email đã xác nhận và khớp ở phía database. Xem cấu hình SMTP, mẫu email Token/ConfirmationURL và Secure Email Change trong `docs/DATABASE-SETUP.md`.
 
 Hiện `cloudConfig.enabled:false`: chưa gửi email thật, chưa bật điều kiện xác nhận hộp thư; bản trải nghiệm ghi rõ chỉ kiểm tra định dạng. Kiểm thử email dùng Auth giả lập và PostgreSQL/PGlite, không chứng minh SMTP thực đã được cấu hình. Không đặt `emailVerificationRequired:false` trong vận hành thật (các bài kiểm tra chức năng cũ dùng cờ này để cô lập luồng OTP).
+
+## Yêu cầu soi sợi tóc
+
+Thẻ tại cuối Tiến trình cho xem mốc, chuẩn bị nháp và gửi yêu cầu khi backend xác nhận đủ điều kiện. Mỗi 1 triệu đồng/năm dương lịch từ mã hợp lệ = 1 lượt; giá trị do quản trị cấp, không khách tự khai. SQL bổ sung và chính sách mặc định tắt: `supabase/microscopy.sql`; hướng dẫn `docs/MICROSCOPY.md`. Khách và quản trị xem trạng thái/kết quả văn bản, không tự gửi email hoặc tạo vận đơn. Ảnh hiển vi, địa chỉ gửi mẫu, phí vận chuyển và SLA chưa được cấu hình; không tự hứa.

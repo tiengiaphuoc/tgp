@@ -6,7 +6,7 @@ const {chromium}=require(process.env.MOC_PLAYWRIGHT_PATH||'playwright');const as
  else if(url.pathname.endsWith('/is_moc_admin'))body=uid==='admin';
  else if(url.pathname.endsWith('/customer_profiles')&&method==='POST'){profiles.set(input.id,input);status=204;}
  else if(url.pathname.endsWith('/customer_profiles'))body=[...profiles.values()];
- else if(url.pathname.endsWith('/import_product_codes')){let created=0;for(const code of input.codes){if(!codes.has(code)){codes.set(code,{code,gift_days:input.days,enabled:true,product_redemptions:[]});created++;}}body={created,skipped:input.codes.length-created};}
+ else if((url.pathname.endsWith('/import_product_codes')||url.pathname.endsWith('/import_product_codes_value'))){let created=0;for(const code of input.codes){if(!codes.has(code)){codes.set(code,{code,gift_days:input.days,enabled:true,product_redemptions:[]});created++;}}body={created,skipped:input.codes.length-created};}
  else if(url.pathname.endsWith('/product_codes'))body=[...codes.values()];
  else if(url.pathname.endsWith('/check_product_code')){const code=codes.get(input.input_code);body={status:!code?'not_found':code.product_redemptions.length?'used':'available',gift_days:code?.gift_days};}
  else if(url.pathname.endsWith('/redeem_product_code')){const code=codes.get(input.input_code);if(!code)body={status:'invalid'};else if(code.product_redemptions.length&&code.product_redemptions[0].user_id!==uid)body={status:'used'};else{const existing=grants.get(uid);const until=existing||new Date(Date.now()+code.gift_days*86400000).toISOString();grants.set(uid,until);body={status:existing?'already_owned':'activated',valid_until:until};code.product_redemptions=[{user_id:uid,granted_until:until}];}}

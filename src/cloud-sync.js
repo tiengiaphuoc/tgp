@@ -1,4 +1,4 @@
-import {createCloudClient,profilePayload} from './cloud-client.js?v=email-17';
+import {createCloudClient,profilePayload} from './cloud-client.js?v=microscopy-20';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function createProfileSync(getState){
  const client=createCloudClient();let timer,running=null,revision=0,stopping=false,status='Chưa chia sẻ hồ sơ',retryDelay=2000;
@@ -13,6 +13,9 @@ export function createProfileSync(getState){
  return {configured,schedule,statusText:()=>status,emailRequired:()=>configured&&client.emailVerificationRequired(),currentUser:()=>client.currentUser(),sendEmailOtp:email=>client.sendEmailOtp(email),confirmEmailOtp:(email,token,challenge)=>client.confirmEmailOtp(email,token,challenge),
   async redeemCode(code){if(!configured)throw new Error('Cần kết nối cơ sở dữ liệu trước khi xác thực mã.');if(!getState().profile?.cloudConsentAt)throw new Error('Lưu hồ sơ và đồng ý chia sẻ để xác thực mã.');await client.upsertProfile(profilePayload(getState()));return client.redeemCode(code);},
   async entitlement(){if(!configured||!getState().profile?.cloudConsentAt||!client.hasSession())return null;return client.entitlement();},
+  async microscopyStatus(){if(!configured||!client.hasSession())throw new Error('Chưa kết nối hồ sơ chung.');return {eligibility:await client.microscopyEligibility(),requests:await client.microscopyRequests()};},
+  async submitMicroscopy(body){if(!configured)throw new Error('Chưa kết nối để gửi yêu cầu.');return client.submitMicroscopy(body);},
+  async cancelMicroscopy(id){return client.cancelMicroscopy(id);},
   consentField(){return configured?`<label class="cloud-consent"><input name="cloudConsent" type="checkbox" ${getState().profile?.cloudConsentAt?'checked disabled':''}>Tôi đồng ý gửi tên, thông tin liên hệ, mục tiêu chăm tóc, mã sản phẩm và thống kê ghi nhận cho đội chăm sóc Mộcceutics. Không gửi ảnh tóc hoặc ghi chú sức khỏe.</label>`:'';},
   storageNote(){return configured?'Thông tin vẫn lưu trên thiết bị. Khi bạn đồng ý chia sẻ, hồ sơ và thống kê ghi nhận được gửi về đội chăm sóc Mộcceutics.':'Hồ sơ hiện chỉ lưu trên thiết bị. Kết nối dữ liệu chung đang chờ cấu hình.';},
   html(){return `<section class="cloud-panel"><h2>Kết nối với đội chăm sóc</h2><p>${esc(configured?'Chia sẻ hồ sơ và thống kê ghi nhận khi bạn đồng ý. Ảnh và cảm nhận da đầu không được gửi lên hệ thống.':'Chưa kết nối cơ sở dữ liệu chung. Hồ sơ và nhật ký vẫn được giữ trên thiết bị.')}</p><span data-cloud-status role="status">${esc(status)}</span>${configured?`<div class="cloud-actions">${getState().profile?.cloudConsentAt?'<button type="button" class="btn outline" data-cloud-retry>Gửi lại hồ sơ</button><button type="button" class="text-btn" data-cloud-remove>Ngừng chia sẻ & xóa hồ sơ đã gửi</button>':'<p>Bạn có thể đồng ý chia sẻ trong phần hồ sơ ở trên.</p>'}</div>`:''}</section>`;},

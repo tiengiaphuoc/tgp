@@ -80,7 +80,7 @@ Quyền lợi và lịch sử đổi mã lưu riêng ở máy chủ, khách khô
 
 Phần xác nhận email được bật tự động khi `cloudConfig.enabled: true` (không đặt `emailVerificationRequired: false` trong vận hành thật). Khi chưa cấu hình Supabase, bản trải nghiệm vẫn chỉ kiểm tra định dạng và hiển thị rõ xác nhận hộp thư chưa bật; chưa có email nào được gửi thật. Không tạo mã OTP trong trình duyệt, không ghi log/lưu mã vào localStorage.
 
-1. Chạy `supabase/email-verification.sql` **sau** hai tệp SQL cơ bản/mã sản phẩm. Nút sao chép thiết lập đã gộp đủ ba tệp theo đúng thứ tự. Nếu chạy lại các tệp, luôn chạy xác nhận email cuối cùng.
+1. Chạy `supabase/email-verification.sql` **sau** hai tệp SQL cơ bản/mã sản phẩm. Nút sao chép thiết lập đã gộp các tệp theo đúng thứ tự, gồm SQL soi tóc ở cuối. Nếu chạy lại các tệp, luôn chạy xác nhận email cuối cùng.
 2. Authentication → Email: bật Confirm email. Cấu hình **SMTP riêng**, tên miền gửi và giới hạn gửi phù hợp để gửi cho khách thật. Email mặc định của Supabase bị hạn chế người nhận/công suất, không nên coi là dịch vụ gửi cho toàn bộ khách. Không gửi mật khẩu SMTP hoặc service_role trong chat/mã frontend.
 3. Email Templates → Confirm Sign Up, Magic Link và Change Email Address: thêm `{{ .Token }}` để khách nhận mã số. Giữ thêm liên kết `{{ .ConfirmationURL }}` trong mẫu đổi email để hỗ trợ xác nhận an toàn ở cả hai hộp thư. Đặt Site URL/Redirect URLs về địa chỉ GitHub Pages của app. Sau khi mở các liên kết đổi email, khách bấm “Kiểm tra lại trạng thái xác nhận” trên cùng thiết bị. Kiểm tra Token Length khớp 6–10 chữ số, hạn mã và giới hạn gửi. Mẫu tiếng Việt sẵn có: `supabase/email-templates/verify-email.html` dùng cho Confirm Sign Up và Magic Link; `supabase/email-templates/change-email.html` dùng cho Change Email Address. Sao chép nội dung HTML vào mẫu tương ứng trong Supabase. Đặt tiêu đề email có tên thương hiệu. Giữ Secure Email Change; khi đổi email đã xác nhận, có thể cần xác nhận cả hộp thư cũ và mới.
 4. Khách nhập email, bấm Gửi mã, nhập mã thực nhận, bấm Xác nhận email, rồi mới lưu hồ sơ để mở app. Gửi lại có đếm chờ tối thiểu 60 giây; máy chủ tiếp tục áp giới hạn riêng. Không suy ra “email tồn tại” từ gửi yêu cầu thành công.
@@ -88,3 +88,7 @@ Phần xác nhận email được bật tự động khi `cloudConfig.enabled: t
 6. Hồ sơ ẩn danh đã tồn tại được liên kết/xác nhận email trên cùng User ID bằng quy trình đổi email để giữ mã sản phẩm và quyền lợi. Nếu không có phiên, dùng email OTP để đăng nhập/tạo danh tính email. Không tự chuyển dữ liệu local của một người dùng chung thiết bị sang hồ sơ đã có của người khác; kiểm tra quy trình đổi thiết bị với dữ liệu thử trước vận hành. Ảnh local vẫn chưa tự đồng bộ giữa thiết bị.
 
 SQL mới yêu cầu email đã xác nhận và trùng với email Auth khi tạo/sửa hồ sơ và kích hoạt mã sản phẩm. Nó không thay cho việc bảo vệ API tính năng có phí sau này. Đây là kiểm chứng quyền truy cập hộp thư tại thời điểm xác nhận, không xác minh danh tính thật hay bảo đảm khách luôn nhận được email trong tương lai.
+
+## Quyền lợi soi sợi tóc
+
+Chạy thêm `supabase/microscopy.sql` sau ba tệp trước. Quyền lợi tính mỗi 1.000.000đ giá trị mã hợp lệ/năm dương lịch = 1 lượt, chỉ dùng giá trị do quản trị khai và được chụp tại lúc kích hoạt mã. Chính sách tiếp nhận mặc định tắt. Chi tiết vận hành, đối soát mã cũ, hồ sơ yêu cầu, giữ lượt và giới hạn quan sát ở `docs/MICROSCOPY.md`.
