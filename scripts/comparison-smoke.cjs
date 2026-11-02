@@ -14,7 +14,7 @@ const assert=require('node:assert/strict');
   const pixel=async selector=>{const shot=await page.locator(selector).screenshot();return page.evaluate(async data=>{const i=new Image();i.src='data:image/png;base64,'+data;await i.decode();const c=document.createElement('canvas');c.width=i.width;c.height=i.height;const x=c.getContext('2d');x.drawImage(i,0,0);return [...x.getImageData(Math.floor(i.width*.25),Math.floor(i.height*.25),1,1).data];},shot.toString('base64'));};
   for(const width of [360,390,768,1440]){
    await page.setViewportSize({width,height:900});
-   const left=await page.locator('.alignment-reference-stage').boundingBox(),right=await page.locator('.alignment-stage').boundingBox();
+   const {left,right}=await page.evaluate(()=>({left:document.querySelector('.alignment-reference-stage').getBoundingClientRect().toJSON(),right:document.querySelector('.alignment-stage').getBoundingClientRect().toJSON()}));
    assert(left.x+left.width<=right.x+1,'reference and new image must be next to each other');assert(Math.abs(left.y-right.y)<2);assert(Math.abs(left.width-right.width)<2);assert(Math.abs(left.height-right.height)<2);
    const red=await pixel('.alignment-reference-stage'),bluePixel=await pixel('.alignment-stage');assert(red[0]>245&&red[2]<10,'reference is fully visible red');assert(bluePixel[2]>245&&bluePixel[0]<10,'new image is fully visible blue');
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
