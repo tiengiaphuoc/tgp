@@ -92,3 +92,5 @@ SQL mới yêu cầu email đã xác nhận và trùng với email Auth khi tạ
 ## Quyền lợi soi sợi tóc
 
 Chạy thêm `supabase/microscopy.sql` sau ba tệp trước. Quyền lợi tính mỗi 1.000.000đ giá trị mã hợp lệ/năm dương lịch = 1 lượt, chỉ dùng giá trị do quản trị khai và được chụp tại lúc kích hoạt mã. Chính sách tiếp nhận mặc định tắt. Chi tiết vận hành, đối soát mã cũ, hồ sơ yêu cầu, giữ lượt và giới hạn quan sát ở `docs/MICROSCOPY.md`.
+
+Ảnh kết quả soi: chạy thêm `supabase/microscopy-images.sql` sau `microscopy.sql` để có kho riêng tư, xem chi tiết trong `docs/MICROSCOPY.md`.

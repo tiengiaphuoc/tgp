@@ -13,9 +13,9 @@ export function createCloudClient({config=cloudConfig,storage=localStorage,sessi
  const configured=()=>validateCloudConfig(config);
  const root=()=>config.url.replace(/\/$/,'');
  function saveSession(value){session=value?.access_token?{...value,expires_at:Math.floor(Date.now()/1000)+(value.expires_in||3600)}:null;if(session)storage.setItem(sessionKey,JSON.stringify(session));else storage.removeItem(sessionKey);return session;}
- async function request(path,{method='GET',body,token,headers={}}={}){
+ async function request(path,{method='GET',body,raw=false,token,headers={}}={}){
   if(!configured())throw new Error('Chưa cấu hình cơ sở dữ liệu chung.');
-  const response=await fetcher(root()+path,{method,headers:{apikey:config.publishableKey,...(token?{Authorization:'Bearer '+token}:{}),...(body!==undefined?{'Content-Type':'application/json'}:{}),...headers},...(body!==undefined?{body:JSON.stringify(body)}:{}),cache:'no-store',signal:AbortSignal.timeout(20000)});
+  const response=await fetcher(root()+path,{method,headers:{apikey:config.publishableKey,...(token?{Authorization:'Bearer '+token}:{}),...(body!==undefined?{'Content-Type':'application/json'}:{}),...headers},...(body!==undefined?{body:raw?body:JSON.stringify(body)}:{}),cache:'no-store',signal:AbortSignal.timeout(20000)});
   if(!response.ok){const error=new Error(response.status===401?'Phiên đăng nhập hết hạn. Vui lòng thử đăng nhập lại.':response.status===403?'Tài khoản chưa có quyền truy cập dữ liệu này.':'Chưa kết nối được dữ liệu. Kiểm tra mạng và cấu hình Supabase.');error.status=response.status;throw error;}
   return response.status===204?null:response.text().then(text=>text?JSON.parse(text):null);
  }
@@ -56,6 +56,16 @@ export function createCloudClient({config=cloudConfig,storage=localStorage,sessi
   async importCodes(codes,days,expires,purchaseValue){return rest('/rest/v1/rpc/'+(purchaseValue===undefined?'import_product_codes':'import_product_codes_value'),{method:'POST',body:{codes,days,expires,...(purchaseValue===undefined?{}:{purchase_value:purchaseValue})}});},
   async checkCode(code){return rest('/rest/v1/rpc/check_product_code',{method:'POST',body:{input_code:code}});},
   async toggleCode(code,enabled){return rest('/rest/v1/product_codes?code=eq.'+encodeURIComponent(code),{method:'PATCH',body:{enabled},headers:{Prefer:'return=minimal'}});},
+  async microscopyImages(id){return rest('/rest/v1/microscopy_images?request_id=eq.'+encodeURIComponent(id)+'&select=*&order=created_at.asc');},
+  async microscopyImageUrl(path){const result=await rest('/storage/v1/object/sign/microscopy-results/'+path,{method:'POST',body:{expiresIn:300}});return new URL('/storage/v1'+result.signedURL,root()).href;},
+  async uploadMicroscopyImage(id,file,details){
+   const ext={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[file.type];
+   if(!ext||!file.size||file.size>5242880)throw new Error('Ảnh JPG/PNG/WebP tối đa 5 MB.');
+   const path=id+'/'+crypto.randomUUID()+'.'+ext;
+   await rest('/storage/v1/object/microscopy-results/'+path,{method:'POST',body:file,raw:true,headers:{'Content-Type':file.type}});
+   try{await rest('/rest/v1/microscopy_images',{method:'POST',body:{request_id:id,path,...details}});}catch(error){try{await rest('/storage/v1/object/microscopy-results',{method:'DELETE',body:{prefixes:[path]}});}catch{}throw error;}
+  },
+  async deleteMicroscopyImage(image){await rest('/storage/v1/object/microscopy-results',{method:'DELETE',body:{prefixes:[image.path]}});await rest('/rest/v1/microscopy_images?id=eq.'+encodeURIComponent(image.id),{method:'DELETE'});},
   async microscopyEligibility(){return rest('/rest/v1/rpc/microscopy_eligibility',{method:'POST',body:{}});},
   async microscopyRequests(offset=0){return rest('/rest/v1/microscopy_requests?select=*&order=created_at.desc&limit=100&offset='+offset);},
   async submitMicroscopy(body){return rest('/rest/v1/rpc/submit_microscopy_request',{method:'POST',body});},

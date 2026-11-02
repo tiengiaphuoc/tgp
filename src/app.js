@@ -1,9 +1,9 @@
-import {createMicroscopy} from './microscopy.js?v=microscopy-20';
+import {createMicroscopy} from './microscopy.js?v=images-22';
 import {createEmailVerification} from './email-verification.js?v=email-17';
 import {careProfileFields,readCareProfile,personalCarePlan} from './care-profile.js?v=care-12';
 import {createProductAccess,normalizeProductCode} from './product-access.js?v=required-14';
 import {washCard,washGuidance,washAction} from './wash-schedule.js?v=wash-10';
-import {createProfileSync} from './cloud-sync.js?v=microscopy-20';
+import {createProfileSync} from './cloud-sync.js?v=images-22';
 import {loadPublication,readEdits,buildPublication,renderArticle,escapeHtml as articleEscape} from './article-store.js';
 const articlePublication=await loadPublication();
 const articlePreview=new URLSearchParams(location.search).get('preview')==='articles';

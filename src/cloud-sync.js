@@ -1,4 +1,4 @@
-import {createCloudClient,profilePayload} from './cloud-client.js?v=microscopy-20';
+import {createCloudClient,profilePayload} from './cloud-client.js?v=images-22';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function createProfileSync(getState){
  const client=createCloudClient();let timer,running=null,revision=0,stopping=false,status='Chưa chia sẻ hồ sơ',retryDelay=2000;
@@ -13,6 +13,8 @@ export function createProfileSync(getState){
  return {configured,schedule,statusText:()=>status,emailRequired:()=>configured&&client.emailVerificationRequired(),currentUser:()=>client.currentUser(),sendEmailOtp:email=>client.sendEmailOtp(email),confirmEmailOtp:(email,token,challenge)=>client.confirmEmailOtp(email,token,challenge),
   async redeemCode(code){if(!configured)throw new Error('Cần kết nối cơ sở dữ liệu trước khi xác thực mã.');if(!getState().profile?.cloudConsentAt)throw new Error('Lưu hồ sơ và đồng ý chia sẻ để xác thực mã.');await client.upsertProfile(profilePayload(getState()));return client.redeemCode(code);},
   async entitlement(){if(!configured||!getState().profile?.cloudConsentAt||!client.hasSession())return null;return client.entitlement();},
+  microscopyImages:id=>client.microscopyImages(id),
+  microscopyImageUrl:path=>client.microscopyImageUrl(path),
   async microscopyStatus(){if(!configured||!client.hasSession())throw new Error('Chưa kết nối hồ sơ chung.');return {eligibility:await client.microscopyEligibility(),requests:await client.microscopyRequests()};},
   async submitMicroscopy(body){if(!configured)throw new Error('Chưa kết nối để gửi yêu cầu.');return client.submitMicroscopy(body);},
   async cancelMicroscopy(id){return client.cancelMicroscopy(id);},

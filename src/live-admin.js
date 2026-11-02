@@ -1,6 +1,6 @@
-import {mountMicroscopyAdmin} from './microscopy-admin.js?v=microscopy-20';
-import {mountProductCodes} from './product-codes-admin.js?v=microscopy-20';
-import {createCloudClient} from './cloud-client.js?v=microscopy-20';
+import {mountMicroscopyAdmin} from './microscopy-admin.js?v=images-22';
+import {mountProductCodes} from './product-codes-admin.js?v=images-22';
+import {createCloudClient} from './cloud-client.js?v=images-22';
 import {cloudConfig} from './cloud-config.js';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export async function startLiveAdmin(){
