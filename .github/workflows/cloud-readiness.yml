@@ -1,0 +1,21 @@
+name: Check Supabase connection
+on:
+  push:
+    branches: [master]
+    paths:
+      - src/cloud-config.js
+      - scripts/cloud-readiness.mjs
+      - .github/workflows/cloud-readiness.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check public API and schema without creating accounts or reading customer records
+        run: node scripts/cloud-readiness.mjs
