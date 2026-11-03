@@ -2,7 +2,7 @@ const {chromium}=require(process.env.MOC_PLAYWRIGHT_PATH||'playwright');
 const assert=require('node:assert/strict');
 (async()=>{const browser=await chromium.launch({headless:true,executablePath:process.env.MOC_CHROME_PATH||undefined,args:['--no-sandbox']});try{
 const page=await browser.newPage({viewport:{width:1440,height:1050}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
-const base=process.env.MOC_APP_URL||'http://localhost:3000/';await page.goto(new URL('admin.html',base).href,{waitUntil:'networkidle'});
+const base=process.env.MOC_APP_URL||'http://localhost:3000/';await page.goto(new URL('admin.html#demo',base).href,{waitUntil:'networkidle'});
 assert.match(await page.locator('.demo-banner').textContent(),/minh họa/);assert.equal(await page.locator('.stat').count(),4);
 if(process.env.MOC_ADMIN_SHOTS)await page.screenshot({path:'/tmp/moc-admin-desktop.png',fullPage:true});
 await page.locator('[data-view="customers"]').first().click();

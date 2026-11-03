@@ -2,7 +2,7 @@
 import {cloudConfig} from '../src/cloud-config.js';
 import {validateCloudConfig} from '../src/cloud-client.js';
 validateCloudConfig({...cloudConfig,enabled:true});
-const report={project:new URL(cloudConfig.url).hostname,appEnabled:cloudConfig.enabled,auth:null,tables:[]};
+const report={project:new URL(cloudConfig.url).hostname,appEnabled:cloudConfig.enabled,adminEnabled:cloudConfig.adminEnabled===true,promotionsEnabled:cloudConfig.promotionsEnabled===true,auth:null,tables:[]};
 async function get(path){try{const response=await fetch(cloudConfig.url+path,{headers:{apikey:cloudConfig.publishableKey},signal:AbortSignal.timeout(15000),cache:'no-store'});let data;try{data=await response.json();}catch{}return {status:response.status,data};}catch{return {status:0};}}
 const auth=await get('/auth/v1/settings');report.auth={http:auth.status,emailEnabled:auth.data?.external?.email??null,confirmEmail:auth.data?.mailer_autoconfirm===false,signupDisabled:auth.data?.disable_signup??null};
 for(const table of ['moc_admins','customer_profiles','customer_notes','product_codes','product_entitlements','product_redemptions','product_code_attempts','microscopy_policy','microscopy_requests','microscopy_images','microscopy_credit_audit','promotions']){

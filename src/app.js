@@ -1,4 +1,4 @@
-import {loadPromotions,promotionsSection} from './promotions.js?v=promotions-25';
+import {loadPromotions,promotionsSection} from './promotions.js?v=connected-27';
 let promotionData=await loadPromotions();
 import {createMicroscopy} from './microscopy.js?v=hair-3d-24';
 import {createEmailVerification} from './email-verification.js?v=email-17';

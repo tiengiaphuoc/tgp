@@ -1,4 +1,4 @@
-import {cloudConfig} from './cloud-config.js';
+import {cloudConfig} from './cloud-config.js?v=connected-27';
 export function validateCloudConfig(config){
  if(!config?.enabled)return false;
  let url;try{url=new URL(config.url);}catch{throw new Error('Project URL chưa hợp lệ.');}

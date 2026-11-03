@@ -96,3 +96,7 @@ Chạy thêm `supabase/microscopy.sql` sau ba tệp trước. Quyền lợi tín
 Ảnh kết quả soi: chạy thêm `supabase/microscopy-images.sql` sau `microscopy.sql` để có kho riêng tư, xem chi tiết trong `docs/MICROSCOPY.md`.
 
 Khuyến mãi trong tab Sản phẩm: chạy `supabase/promotions.sql` sau `setup.sql`. Quản trị tạo/ẩn/công bố chương trình, app đọc chung theo thời gian hiệu lực. Xem `docs/PROMOTIONS.md` để biết cách lưu nháp/xuất bản khi chưa kết nối.
+
+## Trạng thái kết nối hiện tại
+
+Dự án đã được chủ thương hiệu tạo bảng và khai tài khoản quản trị. `adminEnabled:true` bật đăng nhập/quản trị chung, `promotionsEnabled:true` bật đọc khuyến mãi công khai theo lịch. `enabled:false` giữ đồng bộ khách và xác nhận email chưa bật trong lúc chưa cấu hình/kiểm tra SMTP. Mở `admin.html#promotions` để đăng nhập; máy chủ kiểm tra `is_moc_admin()` sau đăng nhập. Không đưa UID vào mã frontend để tự nhận quyền. Cần chủ tài khoản thử đăng nhập thật và gửi thư thử trước khi bật toàn bộ. Không dùng bảng mẫu trong `#demo` để cập nhật dữ liệu thật.

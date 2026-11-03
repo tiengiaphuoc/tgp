@@ -1,5 +1,5 @@
-import {cloudConfig} from './cloud-config.js';
-import {validateCloudConfig} from './cloud-client.js?v=promotions-25';
+import {cloudConfig} from './cloud-config.js?v=connected-27';
+import {validateCloudConfig} from './cloud-client.js?v=connected-27';
 export const PROMOTIONS_KEY='moc-promotions-editor-v1';
 export const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const vietnamDate=(now=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Ho_Chi_Minh',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
@@ -15,7 +15,7 @@ export function activePromotions(rows,today=vietnamDate()){return rows.filter(r=
 export function readPromotionDrafts(){try{const rows=JSON.parse(localStorage.getItem(PROMOTIONS_KEY)||'null');return Array.isArray(rows)?rows.map(validatePromotion):null;}catch{return null;}}
 export async function loadPromotions(){try{
  let rows;
- if(cloudConfig.enabled){validateCloudConfig(cloudConfig);const r=await fetch(cloudConfig.url.replace(/\/$/,'')+'/rest/v1/promotions?select=*&status=eq.published&order=starts_on.desc&limit=100',{headers:{apikey:cloudConfig.publishableKey},cache:'no-store',signal:AbortSignal.timeout(12000)});if(!r.ok)throw Error();rows=await r.json();}
+ if(cloudConfig.enabled||cloudConfig.promotionsEnabled){validateCloudConfig({...cloudConfig,enabled:true});const r=await fetch(cloudConfig.url.replace(/\/$/,'')+'/rest/v1/promotions?select=*&status=eq.published&order=starts_on.desc&limit=100',{headers:{apikey:cloudConfig.publishableKey},cache:'no-store',signal:AbortSignal.timeout(12000)});if(!r.ok)throw Error();rows=await r.json();}
  else{const r=await fetch(new URL('../content/promotions.json',import.meta.url),{cache:'no-store'});if(!r.ok)throw Error();const data=await r.json();if(data.schemaVersion!==1)throw Error();rows=data.promotions;}
  if(!Array.isArray(rows))throw Error();rows=rows.map(validatePromotion);
  const preview=new URLSearchParams(location.search).get('preview')==='promotions';

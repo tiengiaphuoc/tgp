@@ -14,9 +14,11 @@ Khách không cần tự nhập nội dung. App lấy nội dung chung khi tải
 
 ## Khi chưa kết nối cơ sở dữ liệu
 
-Cấu hình hiện tại vẫn `enabled:false`. Menu **Khuyến mãi** cho phép soạn và lưu nháp trên trình duyệt; thông báo nêu rõ chưa cập nhật app cho khách.
+Dự án hiện đã bật `adminEnabled:true` và `promotionsEnabled:true`: quản trị dùng tài khoản Supabase, khách đọc khuyến mãi chung. `enabled:false` chỉ giữ đồng bộ hồ sơ khách/xác nhận email ở trạng thái chưa bật, chờ kiểm tra SMTP. Không dùng khóa bí mật trong frontend.
+
+Các hướng dẫn dưới đây chỉ áp dụng bản ngoại tuyến khi cả ba cờ kết nối đều tắt. Menu **Khuyến mãi** lúc đó cho phép soạn và lưu nháp trên trình duyệt; thông báo nêu rõ chưa cập nhật app cho khách.
 
 - **Xem trước trên app** mở `?preview=promotions#product`, chỉ dùng bản lưu trong cùng trình duyệt. Nội dung không tự hiện cho khách khác.
 - **Xuất promotions.json** chỉ xuất các chương trình chọn Công bố (kể cả chương trình sắp diễn ra). Thay đúng **`content/promotions.json`** trên GitHub rồi Commit changes; không tải vào thư mục gốc hoặc tên có `(1)`. Chờ GitHub Pages xuất bản rồi khách mở/làm mới app. Bản nháp/ẩn không có trong tệp xuất. Không ghi đè `content/posts.json`.
 - Có thể nhập lại tệp khuyến mãi để tiếp tục chỉnh sửa trên thiết bị. Tệp xuất không phải sao lưu bản nháp.
-- Khi bật Supabase, máy chủ trở thành nguồn duy nhất; không tự lấy nội dung từ tệp tĩnh hay bản nháp cũ. Cần nhập lại chương trình qua quản trị chung trước khi bật. Nếu lỗi tải, app báo lỗi thay vì hiển thị chương trình cũ đã gỡ.
+- Khi bật `promotionsEnabled` hoặc `enabled`, máy chủ trở thành nguồn duy nhất; không tự lấy nội dung từ tệp tĩnh hay bản nháp cũ. Cần nhập lại chương trình qua quản trị chung trước khi bật. Nếu lỗi tải, app báo lỗi thay vì hiển thị chương trình cũ đã gỡ.
