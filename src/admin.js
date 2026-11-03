@@ -1,7 +1,7 @@
 import {mountPromotionsAdmin} from './promotions-admin.js?v=connected-27';
-import {cloudConfig} from './cloud-config.js?v=connected-27';
-import {startLiveAdmin} from './live-admin.js?v=connected-27';
-import {loadPublication} from './article-store.js';
+import {cloudConfig} from './cloud-config.js?v=full-sync-28';
+import {startLiveAdmin} from './live-admin.js?v=full-sync-28';
+import {loadPublication} from './article-store.js?v=full-sync-28';
 import {createArticleManager} from './article-manager.js?v=export-18';
 const articlePublication=await loadPublication();
 const icons={grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',users:'<circle cx="9" cy="8" r="3"/><path d="M2 21v-3a7 7 0 0 1 14 0v3m0-16a3 3 0 0 1 0 6m3 3a6 6 0 0 1 3 5v2"/>',heart:'<path d="M20 5c-3-3-7-1-8 1-2-3-6-4-9-1-5 6 9 15 9 15S25 11 20 5Z"/>',leaf:'<path d="M20 3C5 2 1 11 6 17s16 2 14-14ZM4 21 16 9"/>',chart:'<path d="M3 3v18h19M8 16v-5m5 5V6m5 10V9"/>',settings:'<circle cx="12" cy="12" r="4"/><path d="m10 2 4 0 1 3 3 1 3 3-1 3 1 3-3 3-3 1-1 3h-4l-1-3-3-1-3-3 1-3-1-3 3-3 3-1Z"/>',search:'<circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/>',arrow:'<path d="M4 12h16m-6-6 6 6-6 6"/>',down:'<path d="m7 10 5 5 5-5"/>',download:'<path d="M12 3v13m-5-5 5 5 5-5M4 17v4h16v-4"/>',check:'<path d="m5 12 4 4L20 5"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',bottle:'<path d="M9 3h6v4H9ZM9 7l-3 4v10h12V11l-3-4M7 14h10"/>',lock:'<rect x="5" y="10" width="14" height="12" rx="2"/><path d="M8 10V6a4 4 0 0 1 8 0v4"/>',external:'<path d="M14 3h7v7m0-7L10 14M10 3H3v18h18v-7"/>',bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/>'};

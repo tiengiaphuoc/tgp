@@ -4,6 +4,8 @@ export const cloudConfig=Object.freeze({
  enabled:false,
  adminEnabled:true,
  promotionsEnabled:true,
+ fullSyncEnabled:false,
+ articlesEnabled:false,
  url:'https://dfiqlzzxefkkqirnrgty.supabase.co',
  publishableKey:'sb_publishable_9DQvr2lI_QpZW82YdL58fg_T2D3A3xl'
 });

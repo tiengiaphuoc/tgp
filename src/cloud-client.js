@@ -1,4 +1,4 @@
-import {cloudConfig} from './cloud-config.js?v=connected-27';
+import {cloudConfig} from './cloud-config.js?v=full-sync-28';
 export function validateCloudConfig(config){
  if(!config?.enabled)return false;
  let url;try{url=new URL(config.url);}catch{throw new Error('Project URL chưa hợp lệ.');}
@@ -56,6 +56,16 @@ export function createCloudClient({config=cloudConfig,storage=localStorage,sessi
   async importCodes(codes,days,expires,purchaseValue){return rest('/rest/v1/rpc/'+(purchaseValue===undefined?'import_product_codes':'import_product_codes_value'),{method:'POST',body:{codes,days,expires,...(purchaseValue===undefined?{}:{purchase_value:purchaseValue})}});},
   async checkCode(code){return rest('/rest/v1/rpc/check_product_code',{method:'POST',body:{input_code:code}});},
   async toggleCode(code,enabled){return rest('/rest/v1/product_codes?code=eq.'+encodeURIComponent(code),{method:'PATCH',body:{enabled},headers:{Prefer:'return=minimal'}});},
+  async customerBackup(id){const current=await auth();const rows=await rest('/rest/v1/customer_backups?user_id=eq.'+encodeURIComponent(id||current.user.id)+'&select=*');return rows[0]||null;},
+  async fullConsent(){const current=await auth();const rows=await rest('/rest/v1/customer_sync_consents?user_id=eq.'+encodeURIComponent(current.user.id)+'&select=*');return rows[0]||null;},
+  async grantFullConsent(){return rest('/rest/v1/rpc/set_full_sync_consent',{method:'POST',body:{grant_consent:true}});},
+  async saveBackup(payload,revision,token){return rest('/rest/v1/rpc/save_customer_backup',{method:'POST',body:{payload,expected_revision:revision,consent:true,consent_token:token}});},
+  async deleteBackup(){return rest('/rest/v1/rpc/set_full_sync_consent',{method:'POST',body:{grant_consent:false}});},
+  async uploadHair(file){const current=await auth(),path=current.user.id+'/'+crypto.randomUUID()+'.jpg';await rest('/storage/v1/object/customer-hair/'+path,{method:'POST',body:file,raw:true,headers:{'Content-Type':'image/jpeg'}});return path;},
+  async hairUrl(path){const data=await rest('/storage/v1/object/sign/customer-hair/'+path,{method:'POST',body:{expiresIn:300}});return new URL('/storage/v1'+data.signedURL,root()).href;},
+  async deleteHair(paths){if(paths.length)return rest('/storage/v1/object/customer-hair',{method:'DELETE',body:{prefixes:paths}});},
+  async articlePublication(){const rows=await rest('/rest/v1/article_publications?id=eq.1&select=*');return rows[0]||null;},
+  async publishArticles(posts,revision){return rest('/rest/v1/rpc/publish_articles',{method:'POST',body:{article_posts:posts,expected_revision:revision}});},
   async listPromotions(offset=0){return rest('/rest/v1/promotions?select=*&order=updated_at.desc,id&limit=100&offset='+offset);},
   async savePromotion(row){return rest('/rest/v1/promotions?on_conflict=id',{method:'POST',body:row,headers:{Prefer:'resolution=merge-duplicates,return=minimal'}});},
   async deletePromotion(id){return rest('/rest/v1/promotions?id=eq.'+encodeURIComponent(id),{method:'DELETE'});},
