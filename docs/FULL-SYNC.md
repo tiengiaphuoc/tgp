@@ -2,7 +2,7 @@
 
 ## Trạng thái triển khai
 
-Quản trị và khuyến mãi đang kết nối. Các phần đồng bộ chi tiết và bài viết chung được chuẩn bị trong mã nguồn, **chưa bật cho khách**: chủ dự án cần chạy `supabase/full-sync.sql` sau các SQL đã có, cấu hình SMTP, thử xác nhận email rồi mới bật `enabled`, `fullSyncEnabled`, `articlesEnabled` trong `src/cloud-config.js`. Không bật trước khi hoàn tất; dữ liệu hiện có trên thiết bị được giữ. Các kiểm tra tự động dùng tài khoản/Storage mô phỏng, không gửi thư thật hay tạo khách thử trên dự án.
+Quản trị, khuyến mãi và bài viết chung đã bật (`articlesEnabled:true`) sau khi chủ dự án chạy SQL bổ sung và kiểm tra đủ bảng. Đồng bộ tài khoản khách/ảnh chi tiết **chưa bật cho khách**: cần cấu hình SMTP, thử xác nhận email rồi mới bật `enabled`, `fullSyncEnabled` trong `src/cloud-config.js`. Không bật trước khi hoàn tất; dữ liệu hiện có trên thiết bị được giữ. Các kiểm tra tự động dùng tài khoản/Storage mô phỏng, không gửi thư thật hay tạo khách thử trên dự án.
 
 ## Phạm vi
 

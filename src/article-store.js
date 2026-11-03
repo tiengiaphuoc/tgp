@@ -1,4 +1,4 @@
-import {cloudConfig} from './cloud-config.js?v=full-sync-28';
+import {cloudConfig} from './cloud-config.js?v=articles-live-29';
 export const CMS_KEY='moc-editor-v1';
 export const categories=['Chăm sóc tóc','Hiểu mái tóc','Hướng dẫn sản phẩm','Lắng nghe cơ thể'];
 export const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

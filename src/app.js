@@ -6,7 +6,7 @@ import {careProfileFields,readCareProfile,personalCarePlan} from './care-profile
 import {createProductAccess,normalizeProductCode} from './product-access.js?v=required-14';
 import {washCard,washGuidance,washAction} from './wash-schedule.js?v=wash-10';
 import {createProfileSync} from './cloud-sync.js?v=full-sync-28';
-import {loadPublication,readEdits,buildPublication,renderArticle,escapeHtml as articleEscape} from './article-store.js?v=full-sync-28';
+import {loadPublication,readEdits,buildPublication,renderArticle,escapeHtml as articleEscape} from './article-store.js?v=articles-live-29';
 const articlePublication=await loadPublication();
 const articlePreview=new URLSearchParams(location.search).get('preview')==='articles';
 const articles=articlePreview?buildPublication(articlePublication.posts,readEdits()).posts:articlePublication.posts;
