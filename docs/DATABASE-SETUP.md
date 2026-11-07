@@ -102,3 +102,5 @@ Khuyến mãi trong tab Sản phẩm: chạy `supabase/promotions.sql` sau `setu
 Dự án đã được chủ thương hiệu tạo bảng và khai tài khoản quản trị. `adminEnabled:true` bật đăng nhập/quản trị chung, `promotionsEnabled:true` bật đọc khuyến mãi công khai theo lịch. `enabled:false` giữ đồng bộ khách và xác nhận email chưa bật trong lúc chưa cấu hình/kiểm tra SMTP. Mở `admin.html#promotions` để đăng nhập; máy chủ kiểm tra `is_moc_admin()` sau đăng nhập. Không đưa UID vào mã frontend để tự nhận quyền. Cần chủ tài khoản thử đăng nhập thật và gửi thư thử trước khi bật toàn bộ. Không dùng bảng mẫu trong `#demo` để cập nhật dữ liệu thật.
 
 Đồng bộ chi tiết, khôi phục tài khoản và bài viết chung: xem `sync-setup.html` và `docs/FULL-SYNC.md`. Cần chạy `supabase/full-sync.sql`, thiết lập SMTP rồi thử gửi mã trước khi bật các cờ.
+
+Cập nhật kích hoạt: chủ thương hiệu đã báo lưu SMTP Gmail; các cờ đồng bộ tài khoản/chi tiết đã bật. Cần tự thử nhận mã thật trong app và bảo đảm mẫu Confirm Sign Up/Magic Link chứa `{{ .Token }}`. Các kiểm tra tự động không chứng minh thư đã tới hộp thư.

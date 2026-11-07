@@ -1,4 +1,4 @@
-import {cloudConfig} from './cloud-config.js?v=articles-live-29';
+import {cloudConfig} from './cloud-config.js?v=sync-live-30';
 import {validateCloudConfig} from './cloud-client.js?v=codes-11';
 const message=text=>document.querySelector('#setup-message').textContent=text;
 async function copy(text){try{await navigator.clipboard.writeText(text);message('Đã sao chép. Dán vào SQL Editor của dự án Supabase rồi bấm Run.');}catch{message('Trình duyệt chưa cho sao chép. Dùng nút tải SQL hoặc mở trang trong trình duyệt thông thường.');}}

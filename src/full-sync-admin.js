@@ -1,5 +1,5 @@
 import {imageViewer} from './microscopy-images.js?v=images-22';
-import {validateBackup} from './full-sync.js?v=full-sync-28';
+import {validateBackup} from './full-sync.js?v=sync-live-30';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const observationLabels={visibility:'Mức lộ da đầu (khách ghi nhận)',visualChange:'Thay đổi ảnh (khách ghi nhận)',shedding:'Rụng tóc (khách ghi nhận)',scalp:'Da đầu (khách ghi nhận)',redFlag:'Dấu hiệu cần tư vấn',note:'Ghi chú'};
 const labels={texture:'Loại tóc',porosity:'Độ tơi xốp',scalp:'Da đầu',scalpFlags:'Vấn đề da đầu',concerns:'Vấn đề tóc',age:'Độ tuổi',gender:'Giới tính'};

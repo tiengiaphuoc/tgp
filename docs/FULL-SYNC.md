@@ -2,7 +2,9 @@
 
 ## Trạng thái triển khai
 
-Quản trị, khuyến mãi và bài viết chung đã bật (`articlesEnabled:true`) sau khi chủ dự án chạy SQL bổ sung và kiểm tra đủ bảng. Đồng bộ tài khoản khách/ảnh chi tiết **chưa bật cho khách**: cần cấu hình SMTP, thử xác nhận email rồi mới bật `enabled`, `fullSyncEnabled` trong `src/cloud-config.js`. Không bật trước khi hoàn tất; dữ liệu hiện có trên thiết bị được giữ. Các kiểm tra tự động dùng tài khoản/Storage mô phỏng, không gửi thư thật hay tạo khách thử trên dự án.
+Quản trị, khuyến mãi, bài viết chung và đồng bộ tài khoản đã bật sau khi chủ thương hiệu tạo SQL, cấp quyền quản trị và báo đã lưu SMTP Gmail. `enabled:true`, `fullSyncEnabled:true`, `articlesEnabled:true` trong `src/cloud-config.js`. Kiểm tra tự động đã xác minh luồng bằng API/Storage mô phỏng và chính sách bằng PostgreSQL; **chưa xác minh thư thật đã đến hộp thư khách**. Chủ thương hiệu cần thử nhận mã trên app. Mẫu Confirm Sign Up và Magic Link cần có `{{ .Token }}` để email hiển thị mã số, không chỉ có đường link.
+
+Dữ liệu trên thiết bị cũ không tự xuất hiện trong quản trị: khách mở/làm mới app, xác nhận email, lưu hồ sơ và đồng ý chia sẻ cơ bản; chọn thêm đồng ý chi tiết mới gửi ảnh/ghi chú. Không tạo khách hoặc gửi thư thử tự động khi triển khai. Giữ dữ liệu trên thiết bị khi mạng lỗi.
 
 ## Phạm vi
 

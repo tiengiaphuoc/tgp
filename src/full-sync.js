@@ -1,4 +1,4 @@
-import {cloudConfig} from './cloud-config.js?v=full-sync-28';
+import {cloudConfig} from './cloud-config.js?v=sync-live-30';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const digest=async src=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(src)))).map(x=>x.toString(16).padStart(2,'0')).join('');
 const key=id=>'moc-full-sync:'+id;

@@ -1,3 +1,4 @@
+const {useLocalConfig}=require('./profile-fixture.cjs');
 const {chromium}=require(process.env.MOC_PLAYWRIGHT_PATH||'playwright');
 const assert=require('node:assert/strict');
 (async()=>{
@@ -5,7 +6,7 @@ const assert=require('node:assert/strict');
  try {
   const page=await browser.newPage({viewport:{width:390,height:844}});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(process.env.MOC_APP_URL||'http://localhost:3000/',{waitUntil:'networkidle'});
+  await useLocalConfig(page);await page.goto(process.env.MOC_APP_URL||'http://localhost:3000/',{waitUntil:'networkidle'});
   await page.locator('#welcome-form [name="name"]').fill('Khách thử');await page.locator('#welcome-form [name="email"]').fill('test@example.com');await page.locator('#welcome-form [name="productCode"]').fill('MOC-TEST-001');await page.locator('#welcome-form [type="submit"]').click();
   await page.locator('[data-complete="morning"]').click();
   assert.match(await page.locator('.tag').first().textContent(),/1\/2/);

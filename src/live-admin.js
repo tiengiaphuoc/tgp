@@ -1,10 +1,10 @@
-import {mountCustomerHistory} from './full-sync-admin.js?v=full-sync-28';
-import {mountCloudArticles} from './cloud-articles-admin.js?v=articles-live-29';
+import {mountCustomerHistory} from './full-sync-admin.js?v=sync-live-30';
+import {mountCloudArticles} from './cloud-articles-admin.js?v=sync-live-30';
 import {mountPromotionsAdmin} from './promotions-admin.js?v=connected-27';
 import {mountMicroscopyAdmin} from './microscopy-admin.js?v=hair-3d-24';
 import {mountProductCodes} from './product-codes-admin.js?v=hair-3d-24';
-import {createCloudClient} from './cloud-client.js?v=full-sync-28';
-import {cloudConfig} from './cloud-config.js?v=articles-live-29';
+import {createCloudClient} from './cloud-client.js?v=sync-live-30';
+import {cloudConfig} from './cloud-config.js?v=sync-live-30';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export async function startLiveAdmin(){
  const root=document.querySelector('#admin-app');const client=createCloudClient({config:{...cloudConfig,enabled:cloudConfig.enabled||cloudConfig.adminEnabled===true},storage:sessionStorage,sessionKey:'moc-cloud-admin'});let rows=[],offset=0,selected=null,loadRevision=0;

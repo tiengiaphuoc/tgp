@@ -1,5 +1,5 @@
-import {cloudConfig} from './cloud-config.js?v=full-sync-28';
-import {validateCloudConfig} from './cloud-client.js?v=full-sync-28';
+import {cloudConfig} from './cloud-config.js?v=sync-live-30';
+import {validateCloudConfig} from './cloud-client.js?v=sync-live-30';
 export const PROMOTIONS_KEY='moc-promotions-editor-v1';
 export const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const vietnamDate=(now=new Date())=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Ho_Chi_Minh',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);

@@ -1,5 +1,5 @@
-import {createFullSync} from './full-sync.js?v=full-sync-28';
-import {createCloudClient,profilePayload} from './cloud-client.js?v=full-sync-28';
+import {createFullSync} from './full-sync.js?v=sync-live-30';
+import {createCloudClient,profilePayload} from './cloud-client.js?v=sync-live-30';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function createProfileSync(getState,{onRestore=()=>{}}={}){
  const client=createCloudClient();const full=createFullSync(client,getState,onRestore);let timer,running=null,revision=0,stopping=false,status='Chưa chia sẻ hồ sơ',retryDelay=2000;
