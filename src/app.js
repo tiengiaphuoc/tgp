@@ -1,11 +1,11 @@
 import {loadPromotions,promotionsSection} from './promotions.js?v=connected-27';
 let promotionData=await loadPromotions();
 import {createMicroscopy} from './microscopy.js?v=hair-3d-24';
-import {createEmailVerification} from './email-verification.js?v=email-17';
+import {createEmailVerification} from './email-verification.js?v=email-fix-31';
 import {careProfileFields,readCareProfile,personalCarePlan} from './care-profile.js?v=care-12';
 import {createProductAccess,normalizeProductCode} from './product-access.js?v=required-14';
 import {washCard,washGuidance,washAction} from './wash-schedule.js?v=wash-10';
-import {createProfileSync} from './cloud-sync.js?v=sync-live-30';
+import {createProfileSync} from './cloud-sync.js?v=email-fix-31';
 import {loadPublication,readEdits,buildPublication,renderArticle,escapeHtml as articleEscape} from './article-store.js?v=sync-live-30';
 const articlePublication=await loadPublication();
 const articlePreview=new URLSearchParams(location.search).get('preview')==='articles';

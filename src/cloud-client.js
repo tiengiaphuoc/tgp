@@ -1,3 +1,4 @@
+import {authErrorDetails} from './email-errors.js?v=email-fix-31';
 import {cloudConfig} from './cloud-config.js?v=sync-live-30';
 export function validateCloudConfig(config){
  if(!config?.enabled)return false;
@@ -16,7 +17,7 @@ export function createCloudClient({config=cloudConfig,storage=localStorage,sessi
  async function request(path,{method='GET',body,raw=false,token,headers={}}={}){
   if(!configured())throw new Error('Chưa cấu hình cơ sở dữ liệu chung.');
   const response=await fetcher(root()+path,{method,headers:{apikey:config.publishableKey,...(token?{Authorization:'Bearer '+token}:{}),...(body!==undefined?{'Content-Type':'application/json'}:{}),...headers},...(body!==undefined?{body:raw?body:JSON.stringify(body)}:{}),cache:'no-store',signal:AbortSignal.timeout(20000)});
-  if(!response.ok){const error=new Error(response.status===401?'Phiên đăng nhập hết hạn. Vui lòng thử đăng nhập lại.':response.status===403?'Tài khoản chưa có quyền truy cập dữ liệu này.':'Chưa kết nối được dữ liệu. Kiểm tra mạng và cấu hình Supabase.');error.status=response.status;throw error;}
+  if(!response.ok){const error=new Error(response.status===401?'Phiên đăng nhập hết hạn. Vui lòng thử đăng nhập lại.':response.status===403?'Tài khoản chưa có quyền truy cập dữ liệu này.':'Chưa kết nối được dữ liệu. Kiểm tra mạng và cấu hình Supabase.');error.status=response.status;if(path.startsWith('/auth/v1/')){let details;try{details=await response.json();}catch{}Object.assign(error,authErrorDetails(response.status,details,path.startsWith('/auth/v1/otp')||path==='/auth/v1/user'&&method==='PUT'));const retry=Number(response.headers.get('retry-after'));if(Number.isFinite(retry)&&retry>0)error.retryAfter=Math.min(3600,Math.ceil(retry));}throw error;}
   return response.status===204?null:response.text().then(text=>text?JSON.parse(text):null);
  }
  async function authImpl({anonymous=false}={}){

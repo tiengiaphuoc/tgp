@@ -33,3 +33,7 @@ Mỗi lần đồng ý chia sẻ có mã phiên bản đồng ý; rút quyền t
 5. Bật cấu hình toàn bộ sau khi các bước trên đạt. Không vô hiệu hóa xác nhận email hay dùng service_role trong frontend để bỏ qua giới hạn gửi thư.
 
 Hướng dẫn thao tác bằng nút: `sync-setup.html`, có thêm lựa chọn Gmail SMTP để chạy thử nếu chủ thương hiệu chưa có dịch vụ gửi email giao dịch.
+
+## Chẩn đoán chưa nhận thư
+
+Bản email-fix-31 hiển thị phản hồi ngay dưới nút gửi, báo rõ email trống/sai mà không gọi API. Đọc mã lỗi Auth theo danh sách an toàn, không hiển thị phản hồi SMTP thô hoặc thông tin bí mật. Thông báo phân biệt giới hạn gửi, địa chỉ bị hạn chế, provider chưa bật và lỗi dịch vụ. Mọi lần thử gửi đều có chờ ít nhất 60 giây (hoặc Retry-After dài hơn) để tránh lặp yêu cầu khi cấu hình sai. HTTP thành công chỉ xác nhận yêu cầu được nhận, không chứng minh thư đến hộp thư. Chủ dự án xem Auth Logs cho lần POST /otp hoặc PUT /user gần nhất nếu cần nguyên nhân SMTP cụ thể. Hướng dẫn có ở `sync-setup.html#email-troubleshooting`.
