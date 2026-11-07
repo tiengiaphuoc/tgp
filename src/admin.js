@@ -1,5 +1,5 @@
 import {mountPromotionsAdmin} from './promotions-admin.js?v=connected-27';
-import {cloudConfig} from './cloud-config.js?v=sync-live-30';
+import {cloudConfig} from './cloud-config.js?v=customer-login-33';
 import {startLiveAdmin} from './live-admin.js?v=admin-studio-32';
 import {loadPublication} from './article-store.js?v=sync-live-30';
 import {createArticleManager} from './article-manager.js?v=export-18';

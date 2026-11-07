@@ -2,6 +2,7 @@
 // Never put service_role, sb_secret, passwords or access tokens here.
 export const cloudConfig=Object.freeze({
  enabled:true,
+ customerLoginEnabled:true,
  adminEnabled:true,
  promotionsEnabled:true,
  fullSyncEnabled:true,

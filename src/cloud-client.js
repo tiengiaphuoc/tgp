@@ -1,5 +1,5 @@
 import {authErrorDetails} from './email-errors.js?v=email-fix-31';
-import {cloudConfig} from './cloud-config.js?v=sync-live-30';
+import {cloudConfig} from './cloud-config.js?v=customer-login-33';
 export function validateCloudConfig(config){
  if(!config?.enabled)return false;
  let url;try{url=new URL(config.url);}catch{throw new Error('Project URL chưa hợp lệ.');}
@@ -10,11 +10,13 @@ export function validateCloudConfig(config){
  return true;
 }
 export function createCloudClient({config=cloudConfig,storage=localStorage,sessionKey='moc-cloud-customer',fetcher=fetch}={}){
- let session=null;try{session=JSON.parse(storage.getItem(sessionKey)||'null');}catch{}
+ let sessionGeneration=0;let session=null;try{session=JSON.parse(storage.getItem(sessionKey)||'null');}catch{}
  const configured=()=>validateCloudConfig(config);
  const root=()=>config.url.replace(/\/$/,'');
- function saveSession(value){session=value?.access_token?{...value,expires_at:Math.floor(Date.now()/1000)+(value.expires_in||3600)}:null;if(session)storage.setItem(sessionKey,JSON.stringify(session));else storage.removeItem(sessionKey);return session;}
- async function request(path,{method='GET',body,raw=false,token,headers={}}={}){
+ function saveSession(value){sessionGeneration++;session=value?.access_token?{...value,expires_at:Math.floor(Date.now()/1000)+(value.expires_in||3600)}:null;if(session)storage.setItem(sessionKey,JSON.stringify(session));else storage.removeItem(sessionKey);return session;}
+ const inFlight=new Set();
+ async function request(path,options={}){const job=performRequest(path,options);inFlight.add(job);try{return await job;}finally{inFlight.delete(job);}}
+ async function performRequest(path,{method='GET',body,raw=false,token,headers={}}={}){
   if(!configured())throw new Error('Chưa cấu hình cơ sở dữ liệu chung.');
   const response=await fetcher(root()+path,{method,headers:{apikey:config.publishableKey,...(token?{Authorization:'Bearer '+token}:{}),...(body!==undefined?{'Content-Type':'application/json'}:{}),...headers},...(body!==undefined?{body:raw?body:JSON.stringify(body)}:{}),cache:'no-store',signal:AbortSignal.timeout(20000)});
   if(!response.ok){const error=new Error(response.status===401?'Phiên đăng nhập hết hạn. Vui lòng thử đăng nhập lại.':response.status===403?'Tài khoản chưa có quyền truy cập dữ liệu này.':'Chưa kết nối được dữ liệu. Kiểm tra mạng và cấu hình Supabase.');error.status=response.status;if(path.startsWith('/auth/v1/')){let details;try{details=await response.json();}catch{}Object.assign(error,authErrorDetails(response.status,details,path.startsWith('/auth/v1/otp')||path==='/auth/v1/user'&&method==='PUT'));const retry=Number(response.headers.get('retry-after'));if(Number.isFinite(retry)&&retry>0)error.retryAfter=Math.min(3600,Math.ceil(retry));}throw error;}
@@ -22,15 +24,19 @@ export function createCloudClient({config=cloudConfig,storage=localStorage,sessi
  }
  async function authImpl({anonymous=false}={}){
   if(!session){if(!anonymous)throw new Error('Vui lòng đăng nhập quản trị.');return saveSession(await request('/auth/v1/signup',{method:'POST',body:{data:{app:'mocceutics'}}}));}
-  if(session.expires_at<=Math.floor(Date.now()/1000)+60)saveSession(await request('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:session.refresh_token}}));
+  if(session.expires_at<=Math.floor(Date.now()/1000)+60){const generation=sessionGeneration;const refreshed=await request('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:session.refresh_token}});if(generation!==sessionGeneration)throw Error('Phiên đăng nhập đã thay đổi. Hãy thử lại.');saveSession(refreshed);}
   return session;
  }
  let authPending=null;
  async function auth(options={}){if(authPending)return authPending;authPending=authImpl(options);try{return await authPending;}finally{authPending=null;}}
  async function rest(path,options={}){const current=await auth();try{return await request(path,{...options,token:current.access_token});}catch(error){if(error.status!==401)throw error;session.expires_at=0;const refreshed=await auth();return request(path,{...options,token:refreshed.access_token});}}
- return {configured,hasSession:()=>!!session,
-  async signIn(email,password){const result=await request('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password}});saveSession(result);return result;},
-  async signOut(){try{if(session)await request('/auth/v1/logout',{method:'POST',token:session.access_token});}finally{saveSession(null);}},
+ return {configured,async waitForIdle(){do{if(authPending)await authPending.catch(()=>{});await Promise.allSettled([...inFlight]);await Promise.resolve();}while(inFlight.size||authPending);},hasSession:()=>!!session,
+  async signIn(email,password){const generation=sessionGeneration;const result=await request('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password}});if(generation!==sessionGeneration)throw Error('Phiên đăng nhập đã thay đổi. Hãy thử lại.');saveSession(result);return result;},
+  forgetSession(){saveSession(null);},
+  async accountOtp(email,createUser=false){await request('/auth/v1/otp',{method:'POST',body:{email,create_user:createUser}});return {type:'email',owner:null};},
+  async setCustomerPassword(password){if(typeof password!=='string'||password.length<8)throw new Error('Mật khẩu cần ít nhất 8 ký tự.');const user=await this.currentUser();if(!user?.email_confirmed_at)throw new Error('Cần xác nhận email trước khi đặt mật khẩu.');const current=await auth();await request('/auth/v1/user',{method:'PUT',token:current.access_token,body:{password}});const updated=await this.currentUser();if(!updated?.email_confirmed_at||updated.id!==user.id)throw Error('Phiên xác nhận đã thay đổi. Hãy đăng nhập lại.');return updated;},
+  async ownProfile(){const current=await auth();const rows=await rest('/rest/v1/customer_profiles?id=eq.'+encodeURIComponent(current.user.id)+'&select=*');return rows[0]||null;},
+  async signOut({scope='global'}={}){try{if(session)await request('/auth/v1/logout'+(scope==='local'?'?scope=local':''),{method:'POST',token:session.access_token});}finally{saveSession(null);}},
   emailVerificationRequired:()=>configured()&&config.emailVerificationRequired!==false,
   async currentUser(){if(!session)return null;const current=await auth();return request('/auth/v1/user',{token:current.access_token});},
   async sendEmailOtp(email){
@@ -38,11 +44,13 @@ export function createCloudClient({config=cloudConfig,storage=localStorage,sessi
    await request('/auth/v1/otp',{method:'POST',body:{email,create_user:true}});return {type:'email',owner:session?.user?.id||null};
   },
   async confirmEmailOtp(email,token,challenge){
-   const data=await request('/auth/v1/verify',{method:'POST',body:{email,token,type:challenge.type}});
+   const generation=sessionGeneration;const data=await request('/auth/v1/verify',{method:'POST',body:{email,token,type:challenge.type}});
+   if(generation!==sessionGeneration)throw Error('Phiên xác nhận đã thay đổi.');
    if(challenge.owner&&data.user?.id&&data.user.id!==challenge.owner)throw new Error('Phiên xác nhận không khớp hồ sơ.');
    if(!data.access_token&&!session)throw new Error('Chưa xác nhận được email.');
    const current=data.access_token?data:await auth();const user=await request('/auth/v1/user',{token:current.access_token});
    if(!user.email_confirmed_at||user.email?.toLowerCase()!==email.toLowerCase()||(challenge.owner&&user.id!==challenge.owner))throw new Error('Email chưa được xác nhận đầy đủ. Nếu đổi email, có thể cần xác nhận cả hộp thư cũ và mới.');
+   if(generation!==sessionGeneration)throw Error('Phiên xác nhận đã thay đổi.');
    if(data.access_token)saveSession({...data,user});
    return user;
   },
