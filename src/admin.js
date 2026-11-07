@@ -1,6 +1,6 @@
 import {mountPromotionsAdmin} from './promotions-admin.js?v=connected-27';
 import {cloudConfig} from './cloud-config.js?v=sync-live-30';
-import {startLiveAdmin} from './live-admin.js?v=email-fix-31';
+import {startLiveAdmin} from './live-admin.js?v=admin-studio-32';
 import {loadPublication} from './article-store.js?v=sync-live-30';
 import {createArticleManager} from './article-manager.js?v=export-18';
 const articlePublication=await loadPublication();
